@@ -12,27 +12,27 @@ The goal of the application is to simplify meal planning, support healthier eati
 
 # Zber požiadaviek
 
-- Systém umožní vytvoriť a spravovať účet.
-- Systém umožní zadať a upravovať osobné údaje (váha, výška, vek, aktivita, cieľ).
-- Systém automaticky vypočíta odporúčaný denný príjem kalórií a makroživín na základe údajov používateľa.
-- Systém umožní spravovať nastavenia aplikácie.
-- Systém umožní evidovať potraviny s nutričnými hodnotami a cenou.
-- Systém umožní vytvárať jedlá z viacerých potravín.
-- Systém umožní vyhľadávať potraviny a jedlá podľa názvu.
-- Systém umožní upravovať a odstraňovať potraviny a jedlá.
-- Systém umožní vytvárať a spravovať plán stravovania pre rôzne obdobia.
-- Systém umožní pridávať jedlá do plánu stravovania.
-- Systém automaticky vypočíta kalórie a makroživiny pre plán.
-- Systém umožní zobraziť prehľad nutričných hodnôt plánu.
-- Systém umožní evidovať ceny potravín.
-- Systém umožní vytvoriť nákupný zoznam.
-- Systém umožní automaticky vytvoriť nákupný zoznam na základe vybraných jedál.
-- Systém umožní sledovať výdavky na potraviny.
-- Systém umožní porovnať rozpočet s výdavkami.
-- Systém bude obsahovať chat asistenta na odporúčania stravovania.
-- Systém umožní automaticky doplniť nutričné hodnoty potraviny na základe názvu.
-- Systém umožní využívať rôzne úrovne predplatného (Free, Premium).
-- Systém obmedzí prístup k vybraným funkciám podľa typu predplatného.
+- RQ01 Systém umožní vytvoriť a spravovať účet.
+- RQ02 Systém umožní zadať a upravovať osobné údaje (váha, výška, vek, aktivita, cieľ).
+- RQ03 Systém automaticky vypočíta odporúčaný denný príjem kalórií a makroživín na základe údajov používateľa.
+- RQ04 Systém umožní spravovať nastavenia aplikácie.
+- RQ05 Systém umožní evidovať potraviny s nutričnými hodnotami a cenou.
+- RQ06 Systém umožní vytvárať jedlá z viacerých potravín.
+- RQ07 Systém umožní vyhľadávať potraviny a jedlá podľa názvu.
+- RQ08 Systém umožní upravovať a odstraňovať potraviny a jedlá.
+- RQ09 Systém umožní vytvárať a spravovať plán stravovania pre rôzne obdobia.
+- RQ010 Systém umožní pridávať jedlá do plánu stravovania.
+- RQ011 Systém automaticky vypočíta kalórie a makroživiny pre plán.
+- RQ012 Systém umožní zobraziť prehľad nutričných hodnôt plánu.
+- RQ013 Systém umožní evidovať ceny potravín.
+- RQ014 Systém umožní vytvoriť nákupný zoznam.
+- RQ015 Systém umožní automaticky vytvoriť nákupný zoznam na základe vybraných jedál.
+- RQ016 Systém umožní sledovať výdavky na potraviny.
+- RQ017 Systém umožní porovnať rozpočet s výdavkami.
+- RQ018 Systém bude obsahovať chat asistenta na odporúčania stravovania.
+- RQ019 Systém umožní automaticky doplniť nutričné hodnoty potraviny na základe názvu.
+- RQ020 Systém umožní využívať rôzne úrovne predplatného (Free, Premium).
+- RQ021 Systém obmedzí prístup k vybraným funkciám podľa typu predplatného.
 
 # Slovník pojmov
 
