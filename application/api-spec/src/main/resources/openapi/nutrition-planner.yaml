@@ -3,8 +3,13 @@ info:
   title: Nutrition Planner
   description: API for Nutrition Planner application
   version: 1.0.0
+
 servers:
-  - url: 'https'
+  - url: http://localhost:8080
+
+security:
+  - bearerAuth: [ ]
+
 paths:
   /health:
     get:
@@ -13,3 +18,207 @@ paths:
       responses:
         '200':
           description: OK
+  /auth/login:
+    post:
+      summary: Prihlásenie používateľa a získanie JWT tokenu
+      operationId: loginUser
+      tags:
+        - Auth
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Používateľ bol úspešne prihlásený
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /food-products:
+    post:
+      summary: Vytvorenie novej potraviny
+      operationId: createFoodProduct
+      tags:
+        - FoodProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFoodProductRequest'
+      responses:
+        '201':
+          description: Potravina úspešne vytvorená
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodProduct'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 1
+
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+          example: Bearer
+        expiresIn:
+          type: integer
+          format: int64
+
+    CreateFoodProductRequest:
+      type: object
+      required:
+        - name
+        - calories
+        - protein
+        - fat
+        - carbohydrates
+        - price
+      properties:
+        name:
+          type: string
+          minLength: 1
+          pattern: "^.*\\S.*$"
+        calories:
+          type: number
+          format: double
+          minimum: 0
+        protein:
+          type: number
+          format: double
+          minimum: 0
+        fat:
+          type: number
+          format: double
+          minimum: 0
+        carbohydrates:
+          type: number
+          format: double
+          minimum: 0
+        price:
+          type: number
+          format: double
+          minimum: 0
+
+    FoodProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unikátny identifikátor potraviny.
+          readOnly: true
+        name:
+          type: string
+          description: Názov potraviny.
+        calories:
+          type: number
+          format: double
+          description: Energetická hodnota potraviny.
+        protein:
+          type: number
+          format: double
+          description: Množstvo bielkovín.
+        fat:
+          type: number
+          format: double
+          description: Množstvo tukov.
+        carbohydrates:
+          type: number
+          format: double
+          description: Množstvo sacharidov.
+        price:
+          type: number
+          format: double
+          description: Cena potraviny.
