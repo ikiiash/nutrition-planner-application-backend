@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
+                 version="3.0">
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.foodproduct.FoodProduct" access="FIELD">
+        <table name="food_product"/>
+
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="name" optional="false"/>
+            <basic name="calories" optional="false"/>
+            <basic name="protein" optional="false"/>
+            <basic name="fat" optional="false"/>
+            <basic name="carbohydrates" optional="false"/>
+            <basic name="price" optional="false"/>
+        </attributes>
+    </entity>
+
+</entity-mappings>

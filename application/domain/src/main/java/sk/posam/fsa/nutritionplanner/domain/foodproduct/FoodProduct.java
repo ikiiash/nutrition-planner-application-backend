@@ -12,6 +12,9 @@ public class FoodProduct {
     private Double carbohydrates;
     private Double price;
 
+    public FoodProduct() {
+    }
+
     public FoodProduct(Long id,
                        String name,
                        Double calories,
@@ -26,34 +29,6 @@ public class FoodProduct {
         this.fat = fat;
         this.carbohydrates = carbohydrates;
         this.price = price;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Double getCalories() {
-        return calories;
-    }
-
-    public Double getProtein() {
-        return protein;
-    }
-
-    public Double getFat() {
-        return fat;
-    }
-
-    public Double getCarbohydrates() {
-        return carbohydrates;
-    }
-
-    public Double getPrice() {
-        return price;
     }
 
     public void validate() {
@@ -77,12 +52,66 @@ public class FoodProduct {
         }
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getCalories() {
+        return calories;
+    }
+
+    public void setCalories(Double calories) {
+        this.calories = calories;
+    }
+
+    public Double getProtein() {
+        return protein;
+    }
+
+    public void setProtein(Double protein) {
+        this.protein = protein;
+    }
+
+    public Double getFat() {
+        return fat;
+    }
+
+    public void setFat(Double fat) {
+        this.fat = fat;
+    }
+
+    public Double getCarbohydrates() {
+        return carbohydrates;
+    }
+
+    public void setCarbohydrates(Double carbohydrates) {
+        this.carbohydrates = carbohydrates;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FoodProduct that = (FoodProduct) o;
+        if (!(o instanceof FoodProduct that)) return false;
         return Objects.equals(id, that.id)
                 && Objects.equals(name, that.name)
                 && Objects.equals(calories, that.calories)
