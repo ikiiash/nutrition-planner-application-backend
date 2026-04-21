@@ -10,6 +10,48 @@ Additionally, a chat assistant will provide basic recommendations related to nut
 
 The goal of the application is to simplify meal planning, support healthier eating habits and help users manage their food-related expenses.
 
+# Authentication and roles
+
+The backend uses Keycloak as the identity provider and acts only as an OAuth2 resource server.
+
+- `ADMIN` for administration and catalog management
+- `USER` for standard authenticated users
+- `PREMIUM_USER` for subscription-gated premium features
+
+Local JWT issuing has been removed from the backend.
+
+# Run
+
+Application:
+
+- local workshop mode: `./mvnw -pl application/springboot -am spring-boot:run`
+- keycloak profile: `./mvnw -pl application/springboot -am spring-boot:run -Dspring-boot.run.profiles=keycloak`
+
+Database:
+
+- PostgreSQL: `docker compose up -d db`
+
+Keycloak:
+
+- start Keycloak: `docker compose up -d my-keycloak`
+- bootstrap realm, client, roles and demo users on Windows: `powershell -ExecutionPolicy Bypass -File .scripts\keycloak\bootstrap-nutrition-realm.ps1`
+- bootstrap realm, client, roles and demo users on bash: `bash .scripts/keycloak/bootstrap-nutrition-realm.sh`
+- run backend with Keycloak profile: `./mvnw clean -pl application/springboot -am spring-boot:run -Dspring-boot.run.profiles=keycloak`
+
+Keycloak defaults:
+
+- realm: `NUTRITION`
+- client id: `nutrition-planner-client`
+- client secret: `nutrition-planner-client-secret`
+- users:
+  - `admin@nutrition.local / admin123 / ADMIN`
+  - `user@nutrition.local / user123 / USER`
+  - `premium@nutrition.local / premium123 / PREMIUM_USER`
+
+Token endpoint:
+
+- `http://localhost:8081/realms/NUTRITION/protocol/openid-connect/token`
+
 # Zber požiadaviek
 
 - RQ01 Systém umožní vytvoriť a spravovať účet.
