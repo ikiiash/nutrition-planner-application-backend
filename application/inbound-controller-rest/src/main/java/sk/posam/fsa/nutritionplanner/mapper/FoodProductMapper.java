@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import sk.posam.fsa.nutritionplanner.domain.foodproduct.FoodProduct;
 import sk.posam.fsa.nutritionplanner.rest.dto.CreateFoodProductRequestDto;
 import sk.posam.fsa.nutritionplanner.rest.dto.FoodProductDto;
+import sk.posam.fsa.nutritionplanner.rest.dto.UpdateFoodProductRequestDto;
 
 @Component
 public class FoodProductMapper {
@@ -30,5 +31,17 @@ public class FoodProductMapper {
         dto.setCarbohydrates(foodProduct.getCarbohydrates());
         dto.setPrice(foodProduct.getPrice());
         return dto;
+    }
+
+    public FoodProduct toDomain(UpdateFoodProductRequestDto requestDto) {
+        return new FoodProduct(
+                null,
+                requestDto.getName(),
+                requestDto.getCalories(),
+                requestDto.getProtein(),
+                requestDto.getFat(),
+                requestDto.getCarbohydrates(),
+                requestDto.getPrice()
+        );
     }
 }

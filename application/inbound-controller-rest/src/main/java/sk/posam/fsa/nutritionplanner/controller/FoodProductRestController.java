@@ -9,6 +9,9 @@ import sk.posam.fsa.nutritionplanner.mapper.FoodProductMapper;
 import sk.posam.fsa.nutritionplanner.rest.api.FoodProductApi;
 import sk.posam.fsa.nutritionplanner.rest.dto.CreateFoodProductRequestDto;
 import sk.posam.fsa.nutritionplanner.rest.dto.FoodProductDto;
+import sk.posam.fsa.nutritionplanner.rest.dto.UpdateFoodProductRequestDto;
+
+import java.util.List;
 
 @RestController
 public class FoodProductRestController implements FoodProductApi {
@@ -29,5 +32,33 @@ public class FoodProductRestController implements FoodProductApi {
         FoodProductDto responseDto = foodProductMapper.toDto(createdFoodProduct);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteFoodProduct(Long foodProductId) {
+        foodProductFacade.deleteFoodProduct(foodProductId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<FoodProductDto> readFoodProduct(Long foodProductId) {
+        FoodProduct foodProduct = foodProductFacade.readFoodProduct(foodProductId);
+        return ResponseEntity.ok(foodProductMapper.toDto(foodProduct));
+    }
+
+    @Override
+    public ResponseEntity<List<FoodProductDto>> readFoodProducts(String name) {
+        List<FoodProductDto> response = foodProductFacade.readFoodProducts(name).stream()
+                .map(foodProductMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<FoodProductDto> updateFoodProduct(Long foodProductId,
+                                                            UpdateFoodProductRequestDto updateFoodProductRequestDto) {
+        FoodProduct foodProduct = foodProductMapper.toDomain(updateFoodProductRequestDto);
+        FoodProduct updatedFoodProduct = foodProductFacade.updateFoodProduct(foodProductId, foodProduct);
+        return ResponseEntity.ok(foodProductMapper.toDto(updatedFoodProduct));
     }
 }
