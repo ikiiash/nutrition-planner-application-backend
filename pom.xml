@@ -24,6 +24,8 @@
         <spring.boot.version>4.0.3</spring.boot.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <spring-boot-maven-plugin.version>${spring.boot.version}</spring-boot-maven-plugin.version>
+        <spring-boot.run.skip>true</spring-boot.run.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -56,6 +58,15 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>${build-helper-maven-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot-maven-plugin.version}</version>
+                    <configuration>
+                        <skip>${spring-boot.run.skip}</skip>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
