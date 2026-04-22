@@ -23,9 +23,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health", "/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/food-products/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
-                        .requestMatchers(HttpMethod.POST, "/food-products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/food-products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/food-products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/food-products/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
+                        .requestMatchers(HttpMethod.PUT, "/food-products/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
+                        .requestMatchers(HttpMethod.DELETE, "/food-products/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
+                        .requestMatchers(HttpMethod.GET, "/user-profile/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
+                        .requestMatchers(HttpMethod.PUT, "/user-profile/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
