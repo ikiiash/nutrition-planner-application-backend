@@ -23,22 +23,22 @@ public class JpaFoodProductRepositoryAdapter implements FoodProductRepository {
     }
 
     @Override
-    public List<FoodProduct> readAll() {
-        return foodProductSpringDataRepository.findAll();
+    public List<FoodProduct> readAll(String ownerUserId) {
+        return foodProductSpringDataRepository.findAllByOwnerUserId(ownerUserId);
     }
 
     @Override
-    public List<FoodProduct> readByNameContaining(String name) {
-        return foodProductSpringDataRepository.findByNameContainingIgnoreCase(name);
+    public List<FoodProduct> readByNameContaining(String ownerUserId, String name) {
+        return foodProductSpringDataRepository.findByOwnerUserIdAndNameContainingIgnoreCase(ownerUserId, name);
     }
 
     @Override
-    public Optional<FoodProduct> readById(Long foodProductId) {
-        return foodProductSpringDataRepository.findById(foodProductId);
+    public Optional<FoodProduct> readById(String ownerUserId, Long foodProductId) {
+        return foodProductSpringDataRepository.findByIdAndOwnerUserId(foodProductId, ownerUserId);
     }
 
     @Override
-    public void deleteById(Long foodProductId) {
-        foodProductSpringDataRepository.deleteById(foodProductId);
+    public void deleteById(String ownerUserId, Long foodProductId) {
+        readById(ownerUserId, foodProductId).ifPresent(foodProductSpringDataRepository::delete);
     }
 }

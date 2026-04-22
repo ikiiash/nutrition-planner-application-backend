@@ -13,8 +13,17 @@
                 <generated-value strategy="IDENTITY"/>
             </id>
 
+            <basic name="ownerUserId">
+                <column name="owner_user_id" nullable="false"/>
+            </basic>
             <basic name="name">
                 <column name="name" nullable="false"/>
+            </basic>
+            <basic name="category">
+                <column name="category" nullable="false"/>
+            </basic>
+            <basic name="grams">
+                <column name="grams" nullable="false"/>
             </basic>
             <basic name="calories">
                 <column name="calories" nullable="false"/>
@@ -30,6 +39,52 @@
             </basic>
             <basic name="price">
                 <column name="price" nullable="false"/>
+            </basic>
+            <basic name="photoUrl">
+                <column name="photo_url"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.userprofile.UserProfile" access="FIELD">
+        <table name="user_profile"/>
+
+        <attributes>
+            <id name="id">
+                <column name="user_profile_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="keycloakUserId">
+                <column name="keycloak_user_id" nullable="false" unique="true"/>
+            </basic>
+            <basic name="email">
+                <column name="email"/>
+            </basic>
+            <basic name="age">
+                <column name="age"/>
+            </basic>
+            <basic name="heightCm">
+                <column name="height_cm"/>
+            </basic>
+            <basic name="weightKg">
+                <column name="weight_kg"/>
+            </basic>
+            <basic name="goal">
+                <column name="goal"/>
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="targetCalories">
+                <column name="target_calories"/>
+            </basic>
+            <basic name="targetProtein">
+                <column name="target_protein"/>
+            </basic>
+            <basic name="targetFat">
+                <column name="target_fat"/>
+            </basic>
+            <basic name="targetCarbohydrates">
+                <column name="target_carbohydrates"/>
             </basic>
         </attributes>
     </entity>

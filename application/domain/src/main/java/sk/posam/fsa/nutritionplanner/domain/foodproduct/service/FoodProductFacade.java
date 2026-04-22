@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface FoodProductFacade {
 
-    FoodProduct createFoodProduct(FoodProduct foodProduct);
+    FoodProduct createFoodProduct(String ownerUserId, FoodProduct foodProduct);
 
-    List<FoodProduct> readFoodProducts(String name);
+    List<FoodProduct> readFoodProducts(String ownerUserId, String name);
 
-    FoodProduct readFoodProduct(Long foodProductId);
+    FoodProduct readFoodProduct(String ownerUserId, Long foodProductId);
 
-    FoodProduct updateFoodProduct(Long foodProductId, FoodProduct foodProduct);
+    FoodProduct updateFoodProduct(String ownerUserId, Long foodProductId, FoodProduct foodProduct);
 
-    void deleteFoodProduct(Long foodProductId);
+    void deleteFoodProduct(String ownerUserId, Long foodProductId);
 }

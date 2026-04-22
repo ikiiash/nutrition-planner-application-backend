@@ -7,11 +7,11 @@ public interface FoodProductRepository {
 
     FoodProduct save(FoodProduct foodProduct);
 
-    List<FoodProduct> readAll();
+    List<FoodProduct> readAll(String ownerUserId);
 
-    List<FoodProduct> readByNameContaining(String name);
+    List<FoodProduct> readByNameContaining(String ownerUserId, String name);
 
-    Optional<FoodProduct> readById(Long foodProductId);
+    Optional<FoodProduct> readById(String ownerUserId, Long foodProductId);
 
-    void deleteById(Long foodProductId);
+    void deleteById(String ownerUserId, Long foodProductId);
 }

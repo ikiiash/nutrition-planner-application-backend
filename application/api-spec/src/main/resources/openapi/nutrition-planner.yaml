@@ -101,6 +101,67 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /user-profile/me:
+    get:
+      summary: Read current user profile
+      operationId: readCurrentUserProfile
+      tags:
+        - UserProfile
+      responses:
+        '200':
+          description: User profile returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Create or update current user profile
+      operationId: updateCurrentUserProfile
+      tags:
+        - UserProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserProfileRequest'
+      responses:
+        '200':
+          description: User profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /food-products/{foodProductId}:
     get:
       summary: Read food product by id
@@ -257,6 +318,8 @@ components:
       type: object
       required:
         - name
+        - category
+        - grams
         - calories
         - protein
         - fat
@@ -267,6 +330,14 @@ components:
           type: string
           minLength: 1
           pattern: "^.*\\S.*$"
+        category:
+          type: string
+          minLength: 1
+          pattern: "^.*\\S.*$"
+        grams:
+          type: number
+          format: double
+          minimum: 0.0001
         calories:
           type: number
           format: double
@@ -287,11 +358,15 @@ components:
           type: number
           format: double
           minimum: 0
+        photoUrl:
+          type: string
 
     UpdateFoodProductRequest:
       type: object
       required:
         - name
+        - category
+        - grams
         - calories
         - protein
         - fat
@@ -302,6 +377,14 @@ components:
           type: string
           minLength: 1
           pattern: "^.*\\S.*$"
+        category:
+          type: string
+          minLength: 1
+          pattern: "^.*\\S.*$"
+        grams:
+          type: number
+          format: double
+          minimum: 0.0001
         calories:
           type: number
           format: double
@@ -322,6 +405,69 @@ components:
           type: number
           format: double
           minimum: 0
+        photoUrl:
+          type: string
+
+    UserGoal:
+      type: string
+      enum:
+        - LOSE_WEIGHT
+        - MAINTAIN_WEIGHT
+        - GAIN_MASS
+
+    UpdateUserProfileRequest:
+      type: object
+      required:
+        - age
+        - heightCm
+        - weightKg
+        - goal
+      properties:
+        age:
+          type: integer
+          minimum: 1
+        heightCm:
+          type: number
+          format: double
+          minimum: 0.0001
+        weightKg:
+          type: number
+          format: double
+          minimum: 0.0001
+        goal:
+          $ref: '#/components/schemas/UserGoal'
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        email:
+          type: string
+        age:
+          type: integer
+        heightCm:
+          type: number
+          format: double
+        weightKg:
+          type: number
+          format: double
+        goal:
+          $ref: '#/components/schemas/UserGoal'
+        targetCalories:
+          type: number
+          format: double
+        targetProtein:
+          type: number
+          format: double
+        targetFat:
+          type: number
+          format: double
+        targetCarbohydrates:
+          type: number
+          format: double
 
     FoodProduct:
       type: object
@@ -334,6 +480,13 @@ components:
         name:
           type: string
           description: Food product name.
+        category:
+          type: string
+          description: Food product category.
+        grams:
+          type: number
+          format: double
+          description: Reference weight in grams.
         calories:
           type: number
           format: double
@@ -354,3 +507,6 @@ components:
           type: number
           format: double
           description: Food product price.
+        photoUrl:
+          type: string
+          description: Optional product image URL.

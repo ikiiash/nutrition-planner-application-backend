@@ -12,12 +12,16 @@ public class FoodProductMapper {
     public FoodProduct toDomain(CreateFoodProductRequestDto requestDto) {
         return new FoodProduct(
                 null,
+                null,
                 requestDto.getName(),
+                requestDto.getCategory(),
+                requestDto.getGrams(),
                 requestDto.getCalories(),
                 requestDto.getProtein(),
                 requestDto.getFat(),
                 requestDto.getCarbohydrates(),
-                requestDto.getPrice()
+                requestDto.getPrice(),
+                requestDto.getPhotoUrl()
         );
     }
 
@@ -25,23 +29,30 @@ public class FoodProductMapper {
         FoodProductDto dto = new FoodProductDto();
         dto.setId(foodProduct.getId());
         dto.setName(foodProduct.getName());
+        dto.setCategory(foodProduct.getCategory());
+        dto.setGrams(foodProduct.getGrams());
         dto.setCalories(foodProduct.getCalories());
         dto.setProtein(foodProduct.getProtein());
         dto.setFat(foodProduct.getFat());
         dto.setCarbohydrates(foodProduct.getCarbohydrates());
         dto.setPrice(foodProduct.getPrice());
+        dto.setPhotoUrl(foodProduct.getPhotoUrl());
         return dto;
     }
 
     public FoodProduct toDomain(UpdateFoodProductRequestDto requestDto) {
         return new FoodProduct(
                 null,
+                null,
                 requestDto.getName(),
+                requestDto.getCategory(),
+                requestDto.getGrams(),
                 requestDto.getCalories(),
                 requestDto.getProtein(),
                 requestDto.getFat(),
                 requestDto.getCarbohydrates(),
-                requestDto.getPrice()
+                requestDto.getPrice(),
+                requestDto.getPhotoUrl()
         );
     }
 }

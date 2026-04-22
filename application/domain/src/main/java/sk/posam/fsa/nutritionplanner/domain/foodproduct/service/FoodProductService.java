@@ -15,36 +15,38 @@ public class FoodProductService implements FoodProductFacade {
     }
 
     @Override
-    public FoodProduct createFoodProduct(FoodProduct foodProduct) {
+    public FoodProduct createFoodProduct(String ownerUserId, FoodProduct foodProduct) {
+        foodProduct.setOwnerUserId(ownerUserId);
         foodProduct.validate();
         return foodProductRepository.save(foodProduct);
     }
 
     @Override
-    public List<FoodProduct> readFoodProducts(String name) {
+    public List<FoodProduct> readFoodProducts(String ownerUserId, String name) {
         if (name == null || name.isBlank()) {
-            return foodProductRepository.readAll();
+            return foodProductRepository.readAll(ownerUserId);
         }
-        return foodProductRepository.readByNameContaining(name.trim());
+        return foodProductRepository.readByNameContaining(ownerUserId, name.trim());
     }
 
     @Override
-    public FoodProduct readFoodProduct(Long foodProductId) {
-        return foodProductRepository.readById(foodProductId)
+    public FoodProduct readFoodProduct(String ownerUserId, Long foodProductId) {
+        return foodProductRepository.readById(ownerUserId, foodProductId)
                 .orElseThrow(() -> new FoodProductNotFoundException(foodProductId));
     }
 
     @Override
-    public FoodProduct updateFoodProduct(Long foodProductId, FoodProduct foodProduct) {
-        readFoodProduct(foodProductId);
+    public FoodProduct updateFoodProduct(String ownerUserId, Long foodProductId, FoodProduct foodProduct) {
+        readFoodProduct(ownerUserId, foodProductId);
         foodProduct.setId(foodProductId);
+        foodProduct.setOwnerUserId(ownerUserId);
         foodProduct.validate();
         return foodProductRepository.save(foodProduct);
     }
 
     @Override
-    public void deleteFoodProduct(Long foodProductId) {
-        readFoodProduct(foodProductId);
-        foodProductRepository.deleteById(foodProductId);
+    public void deleteFoodProduct(String ownerUserId, Long foodProductId) {
+        readFoodProduct(ownerUserId, foodProductId);
+        foodProductRepository.deleteById(ownerUserId, foodProductId);
     }
 }

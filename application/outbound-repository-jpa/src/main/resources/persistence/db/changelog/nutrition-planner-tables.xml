@@ -30,4 +30,42 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet id="nutrition-planner-tables-1.1" author="codex">
+        <createTable tableName="user_profile">
+            <column name="user_profile_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="keycloak_user_id" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="age" type="INTEGER"/>
+            <column name="height_cm" type="DOUBLE PRECISION"/>
+            <column name="weight_kg" type="DOUBLE PRECISION"/>
+            <column name="goal" type="VARCHAR(64)"/>
+            <column name="target_calories" type="DOUBLE PRECISION"/>
+            <column name="target_protein" type="DOUBLE PRECISION"/>
+            <column name="target_fat" type="DOUBLE PRECISION"/>
+            <column name="target_carbohydrates" type="DOUBLE PRECISION"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-1.2" author="codex">
+        <addColumn tableName="food_product">
+            <column name="owner_user_id" type="VARCHAR(255)" defaultValue="legacy-user">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)" defaultValue="Uncategorized">
+                <constraints nullable="false"/>
+            </column>
+            <column name="grams" type="DOUBLE PRECISION" defaultValueNumeric="100">
+                <constraints nullable="false"/>
+            </column>
+            <column name="photo_url" type="VARCHAR(1024)"/>
+        </addColumn>
+        <createIndex tableName="food_product" indexName="idx_food_product_owner_user_id">
+            <column name="owner_user_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
