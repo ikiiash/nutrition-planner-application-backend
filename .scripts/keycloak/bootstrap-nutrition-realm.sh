@@ -50,7 +50,7 @@ for role in ADMIN USER PREMIUM_USER; do
 done
 
 client_uuid="$(api_get "/admin/realms/${REALM_NAME}/clients?clientId=${CLIENT_ID}" | jq -r '.[0].id // empty')"
-client_payload="$(jq -n --arg clientId "$CLIENT_ID" --arg secret "$CLIENT_SECRET" '{clientId:$clientId,name:$clientId,enabled:true,protocol:"openid-connect",publicClient:false,clientAuthenticatorType:"client-secret",secret:$secret,standardFlowEnabled:true,directAccessGrantsEnabled:true,serviceAccountsEnabled:false,implicitFlowEnabled:false,redirectUris:["*"],webOrigins:["*"],attributes:{"post.logout.redirect.uris":"*"}}')"
+client_payload="$(jq -n --arg clientId "$CLIENT_ID" '{clientId:$clientId,name:$clientId,enabled:true,protocol:"openid-connect",publicClient:true,standardFlowEnabled:true,directAccessGrantsEnabled:true,serviceAccountsEnabled:false,implicitFlowEnabled:false,redirectUris:["http://localhost:4200/*"],webOrigins:["http://localhost:4200"],attributes:{"post.logout.redirect.uris":"*"}}')"
 if [[ -z "$client_uuid" ]]; then
   api_post "/admin/realms/${REALM_NAME}/clients" "$client_payload"
   client_uuid="$(api_get "/admin/realms/${REALM_NAME}/clients?clientId=${CLIENT_ID}" | jq -r '.[0].id // empty')"
@@ -79,10 +79,12 @@ ensure_user() {
 
 ensure_user admin@nutrition.local admin123 ADMIN System Admin
 ensure_user user@nutrition.local user123 USER Basic User
+ensure_user planner@nutrition.local planner123 USER Meal Planner
 ensure_user premium@nutrition.local premium123 PREMIUM_USER Premium User
 
 echo "Realm: ${REALM_NAME}"
 echo "Client ID: ${CLIENT_ID}"
 echo "- admin@nutrition.local / admin123 / ADMIN"
 echo "- user@nutrition.local / user123 / USER"
+echo "- planner@nutrition.local / planner123 / USER"
 echo "- premium@nutrition.local / premium123 / PREMIUM_USER"

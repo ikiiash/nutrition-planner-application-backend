@@ -46,11 +46,19 @@ Keycloak defaults:
 - users:
   - `admin@nutrition.local / admin123 / ADMIN`
   - `user@nutrition.local / user123 / USER`
+  - `planner@nutrition.local / planner123 / USER`
   - `premium@nutrition.local / premium123 / PREMIUM_USER`
 
 Token endpoint:
 
 - `http://localhost:8081/realms/NUTRITION/protocol/openid-connect/token`
+
+# Current implemented backend scope
+
+- authenticated users can create, read, update and delete their own `food-products`
+- `food-products` now support `category`, `grams` and optional `photoUrl`
+- authenticated users can read and update `/user-profile/me`
+- the user profile stores personal data and calculates target calories and macros based on the selected goal
 
 # Zber požiadaviek
 

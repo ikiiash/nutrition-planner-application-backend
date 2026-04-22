@@ -29,6 +29,7 @@ $Roles = @('ADMIN', 'USER', 'PREMIUM_USER')
 $Users = @(
     @{ Username = 'admin@nutrition.local'; Password = 'admin123'; Role = 'ADMIN'; FirstName = 'System'; LastName = 'Admin' },
     @{ Username = 'user@nutrition.local'; Password = 'user123'; Role = 'USER'; FirstName = 'Basic'; LastName = 'User' },
+    @{ Username = 'planner@nutrition.local'; Password = 'planner123'; Role = 'USER'; FirstName = 'Meal'; LastName = 'Planner' },
     @{ Username = 'premium@nutrition.local'; Password = 'premium123'; Role = 'PREMIUM_USER'; FirstName = 'Premium'; LastName = 'User' }
 )
 
@@ -38,29 +39,48 @@ $script:ClientSecretValue = $null
 function Get-AuthHeaders { @{ Authorization = "Bearer $($script:AccessToken)" } }
 function ConvertTo-JsonBody { param($Payload) (ConvertTo-Json -InputObject $Payload -Depth 20 -Compress) }
 function ConvertTo-Array { param($Value) if ($null -eq $Value) { @() } elseif ($Value -is [System.Array]) { $Value } else { @($Value) } }
+function Invoke-CurlJsonRequest {
+    param(
+        [string]$Method,
+        [string]$Path,
+        $Payload = $null
+    )
+
+    $arguments = @('-s', '-X', $Method, '-H', "Authorization: Bearer $($script:AccessToken)")
+    if ($null -ne $Payload) {
+        $arguments += @('-H', 'Content-Type: application/json', '--data', (ConvertTo-JsonBody -Payload $Payload))
+    }
+    $arguments += "$KeycloakUrl$Path"
+
+    $response = & curl.exe @arguments
+    if ([string]::IsNullOrWhiteSpace($response)) {
+        return $null
+    }
+
+    return $response
+}
 
 function Invoke-ApiGet { param([string]$Path) Invoke-RestMethod -Method Get -Uri "$KeycloakUrl$Path" -Headers (Get-AuthHeaders) }
-function Invoke-ApiPost { param([string]$Path, $Payload) Invoke-WebRequest -Method Post -Uri "$KeycloakUrl$Path" -Headers (Get-AuthHeaders) -ContentType 'application/json' -Body (ConvertTo-JsonBody -Payload $Payload) | Out-Null }
-function Invoke-ApiPut { param([string]$Path, $Payload) Invoke-WebRequest -Method Put -Uri "$KeycloakUrl$Path" -Headers (Get-AuthHeaders) -ContentType 'application/json' -Body (ConvertTo-JsonBody -Payload $Payload) | Out-Null }
+function Invoke-ApiPost { param([string]$Path, $Payload) Invoke-CurlJsonRequest -Method 'POST' -Path $Path -Payload $Payload | Out-Null }
+function Invoke-ApiPut { param([string]$Path, $Payload) Invoke-CurlJsonRequest -Method 'PUT' -Path $Path -Payload $Payload | Out-Null }
 function Invoke-ApiDelete {
     param([string]$Path, $Payload = $null)
-    if ($null -ne $Payload) {
-        Invoke-WebRequest -Method Delete -Uri "$KeycloakUrl$Path" -Headers (Get-AuthHeaders) -ContentType 'application/json' -Body (ConvertTo-JsonBody -Payload $Payload) | Out-Null
-    } else {
-        Invoke-WebRequest -Method Delete -Uri "$KeycloakUrl$Path" -Headers (Get-AuthHeaders) | Out-Null
-    }
+    Invoke-CurlJsonRequest -Method 'DELETE' -Path $Path -Payload $Payload | Out-Null
 }
 
 function Get-StatusCode {
     param([string]$Method, [string]$Path, $Payload = $null)
-    $params = @{ Method = $Method; Uri = "$KeycloakUrl$Path"; Headers = (Get-AuthHeaders) }
+    $url = "$KeycloakUrl$Path"
+    $headers = @('-H', "Authorization: Bearer $($script:AccessToken)")
+    $arguments = @('-s', '-o', 'NUL', '-w', '%{http_code}', '-X', $Method) + $headers
+
     if ($null -ne $Payload) {
-        $params['ContentType'] = 'application/json'
-        $params['Body'] = (ConvertTo-JsonBody -Payload $Payload)
+        $arguments += @('-H', 'Content-Type: application/json', '--data', (ConvertTo-JsonBody -Payload $Payload))
     }
-    $params['SkipHttpErrorCheck'] = $true
-    $response = Invoke-WebRequest @params
-    return [int]$response.StatusCode
+
+    $arguments += $url
+    $statusCode = & curl.exe @arguments
+    return [int]$statusCode
 }
 
 function Get-AdminToken {
@@ -81,9 +101,16 @@ function Ensure-Realm {
     if ($status -eq 200 -and $ForceRecreateRealm) {
         Invoke-ApiDelete -Path "/admin/realms/$RealmName"
         $status = 404
+        Start-Sleep -Seconds 2
     }
     if ($status -eq 404) {
         Invoke-ApiPost -Path '/admin/realms' -Payload @{ realm = $RealmName; enabled = $true }
+        for ($attempt = 0; $attempt -lt 10; $attempt++) {
+            Start-Sleep -Milliseconds 500
+            if ((Get-StatusCode -Method 'GET' -Path "/admin/realms/$RealmName") -eq 200) {
+                break
+            }
+        }
     }
 }
 
@@ -105,9 +132,9 @@ function Ensure-Client {
     $clientUuid = Get-ClientUuid
     $payload = @{
         clientId = $ClientId; name = $ClientId; enabled = $true; protocol = 'openid-connect'
-        publicClient = $false; clientAuthenticatorType = 'client-secret'; secret = $PreferredClientSecret
+        publicClient = $true
         standardFlowEnabled = $true; directAccessGrantsEnabled = $true; serviceAccountsEnabled = $false
-        implicitFlowEnabled = $false; redirectUris = @('*'); webOrigins = @('*')
+        implicitFlowEnabled = $false; redirectUris = @('http://localhost:4200/*'); webOrigins = @('http://localhost:4200')
         attributes = @{ 'post.logout.redirect.uris' = '*' }
     }
     if ([string]::IsNullOrWhiteSpace($clientUuid)) {
@@ -116,7 +143,7 @@ function Ensure-Client {
     } else {
         Invoke-ApiPut -Path "/admin/realms/$RealmName/clients/$clientUuid" -Payload $payload
     }
-    $script:ClientSecretValue = (Invoke-ApiGet -Path "/admin/realms/$RealmName/clients/$clientUuid/client-secret").value
+    $script:ClientSecretValue = $null
 }
 
 function Get-UserId {
@@ -156,7 +183,7 @@ foreach ($user in $Users) { Ensure-User -User $user }
 
 Write-Host "Realm: $RealmName"
 Write-Host "Client ID: $ClientId"
-Write-Host "Client secret: $script:ClientSecretValue"
 Write-Host "- admin@nutrition.local / admin123 / ADMIN"
 Write-Host "- user@nutrition.local / user123 / USER"
+Write-Host "- planner@nutrition.local / planner123 / USER"
 Write-Host "- premium@nutrition.local / premium123 / PREMIUM_USER"
