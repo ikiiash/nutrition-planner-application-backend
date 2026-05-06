@@ -13,7 +13,31 @@ public class CurrentUserProvider {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("Authenticated user is required.");
         }
-        return authentication.getName();
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof Jwt jwt) {
+            String subject = jwt.getSubject();
+            if (subject != null && !subject.isBlank()) {
+                return subject;
+            }
+
+            String preferredUsername = jwt.getClaimAsString("preferred_username");
+            if (preferredUsername != null && !preferredUsername.isBlank()) {
+                return preferredUsername;
+            }
+
+            String email = jwt.getClaimAsString("email");
+            if (email != null && !email.isBlank()) {
+                return email;
+            }
+        }
+
+        String authenticationName = authentication.getName();
+        if (authenticationName != null && !authenticationName.isBlank()) {
+            return authenticationName;
+        }
+
+        throw new IllegalStateException("Authenticated user identifier is missing.");
     }
 
     public String getEmail() {
