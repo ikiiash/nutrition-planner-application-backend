@@ -25,4 +25,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote add gitlab "https://${GITLAB_USERNAME}:${GITLAB_TOKEN}@${GITLAB_REPO_URL#https://}"
-          git push gitlab --mirror
+          git push gitlab main:main
+          git push gitlab --tags
