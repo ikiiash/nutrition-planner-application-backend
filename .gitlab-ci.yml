@@ -16,7 +16,7 @@ cache:
 validate:
   stage: validate
   tags:
-    - fsa
+    - fsa-kiiashchenko
   image: maven:3.9.11-eclipse-temurin-25
   script:
     - mvn -B -ntp clean verify
@@ -24,7 +24,7 @@ validate:
 build:
   stage: build
   tags:
-    - fsa
+    - fsa-kiiashchenko
   image: docker:28-cli
   services:
     - name: docker:28-dind
