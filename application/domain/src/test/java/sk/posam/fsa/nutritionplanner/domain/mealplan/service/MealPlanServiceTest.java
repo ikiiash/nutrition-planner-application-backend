@@ -289,6 +289,230 @@ class MealPlanServiceTest {
         assertThrows(IllegalArgumentException.class, () -> sut.removeEntry(OWNER, 1L, 10L, 999L));
     }
 
+    // ─── deductFridge ──────────────────────────────────────────────────────────
+
+    @Test
+    void deductFridge_does_nothing_when_plan_is_not_active() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(false);
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+
+        sut.deductFridge(OWNER, 1L);
+
+        verify(foodProductRepository, never()).save(any());
+        verify(mealPlanRepository, never()).save(any());
+    }
+
+    @Test
+    void deductFridge_does_nothing_when_activatedAt_is_null() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(null);
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+
+        sut.deductFridge(OWNER, 1L);
+
+        verify(foodProductRepository, never()).save(any());
+        verify(mealPlanRepository, never()).save(any());
+    }
+
+    @Test
+    void deductFridge_does_nothing_when_activated_today() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now());
+        plan.getDays().get(0).getEntries().add(foodProductEntry(5L, 200.0));
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+
+        sut.deductFridge(OWNER, 1L);
+
+        verify(foodProductRepository, never()).save(any());
+        verify(mealPlanRepository, never()).save(any());
+    }
+
+    @Test
+    void deductFridge_does_nothing_when_all_days_already_deducted() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now().minusDays(1));
+        plan.setLastDeductedDayNumber(1);
+        plan.getDays().get(0).getEntries().add(foodProductEntry(5L, 200.0));
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+
+        sut.deductFridge(OWNER, 1L);
+
+        verify(foodProductRepository, never()).save(any());
+        verify(mealPlanRepository, never()).save(any());
+    }
+
+    @Test
+    void deductFridge_deducts_food_product_entry_from_fridge() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now().minusDays(1));
+        plan.getDays().get(0).getEntries().add(foodProductEntry(5L, 200.0));
+
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+        when(foodProductRepository.readById(OWNER, 5L)).thenReturn(Optional.of(fridgeProduct(5L, 500.0)));
+        when(mealPlanRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        sut.deductFridge(OWNER, 1L);
+
+        ArgumentCaptor<FoodProduct> captor = ArgumentCaptor.forClass(FoodProduct.class);
+        verify(foodProductRepository).save(captor.capture());
+        assertEquals(300.0, captor.getValue().getFridgeGrams(), 0.001);
+    }
+
+    @Test
+    void deductFridge_clamps_fridge_grams_to_zero_when_entry_exceeds_available() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now().minusDays(1));
+        plan.getDays().get(0).getEntries().add(foodProductEntry(5L, 600.0));
+
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+        when(foodProductRepository.readById(OWNER, 5L)).thenReturn(Optional.of(fridgeProduct(5L, 200.0)));
+        when(mealPlanRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        sut.deductFridge(OWNER, 1L);
+
+        ArgumentCaptor<FoodProduct> captor = ArgumentCaptor.forClass(FoodProduct.class);
+        verify(foodProductRepository).save(captor.capture());
+        assertEquals(0.0, captor.getValue().getFridgeGrams(), 0.001);
+    }
+
+    @Test
+    void deductFridge_skips_product_not_in_fridge() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now().minusDays(1));
+        plan.getDays().get(0).getEntries().add(foodProductEntry(5L, 200.0));
+
+        FoodProduct product = fridgeProduct(5L, 500.0);
+        product.setInFridge(false);
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+        when(foodProductRepository.readById(OWNER, 5L)).thenReturn(Optional.of(product));
+        when(mealPlanRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        sut.deductFridge(OWNER, 1L);
+
+        verify(foodProductRepository, never()).save(any());
+    }
+
+    @Test
+    void deductFridge_skips_product_with_null_fridge_grams() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now().minusDays(1));
+        plan.getDays().get(0).getEntries().add(foodProductEntry(5L, 200.0));
+
+        FoodProduct product = fridgeProduct(5L, null);
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+        when(foodProductRepository.readById(OWNER, 5L)).thenReturn(Optional.of(product));
+        when(mealPlanRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        sut.deductFridge(OWNER, 1L);
+
+        verify(foodProductRepository, never()).save(any());
+    }
+
+    @Test
+    void deductFridge_skips_entry_when_food_product_not_found() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now().minusDays(1));
+        plan.getDays().get(0).getEntries().add(foodProductEntry(99L, 200.0));
+
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+        when(foodProductRepository.readById(OWNER, 99L)).thenReturn(Optional.empty());
+        when(mealPlanRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        assertDoesNotThrow(() -> sut.deductFridge(OWNER, 1L));
+        verify(foodProductRepository, never()).save(any());
+    }
+
+    @Test
+    void deductFridge_updates_lastDeductedDayNumber_after_deduction() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now().minusDays(1));
+        plan.setLastDeductedDayNumber(0);
+        plan.getDays().get(0).getEntries().add(foodProductEntry(5L, 100.0));
+
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+        when(foodProductRepository.readById(OWNER, 5L)).thenReturn(Optional.of(fridgeProduct(5L, 300.0)));
+        when(mealPlanRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        sut.deductFridge(OWNER, 1L);
+
+        ArgumentCaptor<MealPlan> captor = ArgumentCaptor.forClass(MealPlan.class);
+        verify(mealPlanRepository).save(captor.capture());
+        assertEquals(1, captor.getValue().getLastDeductedDayNumber());
+    }
+
+    @Test
+    void deductFridge_deducts_meal_entry_ingredients_per_portion_and_servings() {
+        MealPlan plan = planWithDay(10L);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now().minusDays(1));
+        plan.setLastDeductedDayNumber(0);
+
+        PlanEntry mealEntry = new PlanEntry();
+        mealEntry.setMealType(MealType.BREAKFAST);
+        mealEntry.setEntryType(EntryType.MEAL);
+        mealEntry.setMealId(7L);
+        mealEntry.setPortions(2.0);
+        plan.getDays().get(0).getEntries().add(mealEntry);
+
+        Meal meal = mealWithIngredients(); // servings=2, ingredient foodProductId=10L grams=100g
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+        when(mealRepository.readById(OWNER, 7L)).thenReturn(Optional.of(meal));
+        when(foodProductRepository.readById(OWNER, 10L)).thenReturn(Optional.of(fridgeProduct(10L, 500.0)));
+        when(mealPlanRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        sut.deductFridge(OWNER, 1L);
+
+        // 100g ingredient, 2 servings, 2 portions → 100 * 2.0 / 2 = 100g deducted
+        ArgumentCaptor<FoodProduct> captor = ArgumentCaptor.forClass(FoodProduct.class);
+        verify(foodProductRepository).save(captor.capture());
+        assertEquals(400.0, captor.getValue().getFridgeGrams(), 0.001);
+    }
+
+    @Test
+    void deductFridge_aggregates_same_product_across_multiple_days() {
+        MealPlan plan = new MealPlan();
+        plan.setId(1L);
+        plan.setOwnerUserId(OWNER);
+        plan.setName("Plan");
+        plan.setStartDate(LocalDate.now().minusDays(3));
+        plan.setNumberOfDays(3);
+        plan.setActive(true);
+        plan.setActivatedAt(LocalDate.now().minusDays(3));
+        plan.setLastDeductedDayNumber(0);
+
+        PlanDay day1 = new PlanDay(1); day1.setId(11L);
+        PlanDay day2 = new PlanDay(2); day2.setId(12L);
+        PlanDay day3 = new PlanDay(3); day3.setId(13L);
+        day1.getEntries().add(foodProductEntry(5L, 100.0));
+        day2.getEntries().add(foodProductEntry(5L, 100.0));
+        day3.getEntries().add(foodProductEntry(5L, 100.0));
+        plan.setDays(new ArrayList<>(List.of(day1, day2, day3)));
+
+        when(mealPlanRepository.readById(OWNER, 1L)).thenReturn(Optional.of(plan));
+        when(foodProductRepository.readById(OWNER, 5L)).thenReturn(Optional.of(fridgeProduct(5L, 500.0)));
+        when(mealPlanRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        sut.deductFridge(OWNER, 1L);
+
+        ArgumentCaptor<FoodProduct> productCaptor = ArgumentCaptor.forClass(FoodProduct.class);
+        verify(foodProductRepository).save(productCaptor.capture()); // aggregated → 1 save
+        assertEquals(200.0, productCaptor.getValue().getFridgeGrams(), 0.001); // 500 - 300 = 200
+
+        ArgumentCaptor<MealPlan> planCaptor = ArgumentCaptor.forClass(MealPlan.class);
+        verify(mealPlanRepository).save(planCaptor.capture());
+        assertEquals(3, planCaptor.getValue().getLastDeductedDayNumber());
+    }
+
     private MealPlan validPlan() {
         MealPlan plan = new MealPlan();
         plan.setOwnerUserId(OWNER);
@@ -344,5 +568,31 @@ class MealPlanServiceTest {
         meal.setServings(2);
         meal.setIngredients(List.of(ingredient));
         return meal;
+    }
+
+    private PlanEntry foodProductEntry(Long productId, Double grams) {
+        PlanEntry entry = new PlanEntry();
+        entry.setMealType(MealType.BREAKFAST);
+        entry.setEntryType(EntryType.FOOD_PRODUCT);
+        entry.setFoodProductId(productId);
+        entry.setGrams(grams);
+        return entry;
+    }
+
+    private FoodProduct fridgeProduct(Long id, Double fridgeGrams) {
+        FoodProduct p = new FoodProduct();
+        p.setId(id);
+        p.setOwnerUserId(OWNER);
+        p.setName("Product-" + id);
+        p.setCategory("Test");
+        p.setGrams(100.0);
+        p.setCalories(100.0);
+        p.setProtein(10.0);
+        p.setFat(5.0);
+        p.setCarbohydrates(10.0);
+        p.setPrice(1.0);
+        p.setInFridge(true);
+        p.setFridgeGrams(fridgeGrams);
+        return p;
     }
 }
