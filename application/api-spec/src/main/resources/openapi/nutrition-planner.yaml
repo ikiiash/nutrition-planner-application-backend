@@ -162,6 +162,451 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /meals:
+    get:
+      summary: List meals
+      operationId: readMeals
+      tags:
+        - Meal
+      responses:
+        '200':
+          description: Meals returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Meal'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Create a new meal
+      operationId: createMeal
+      tags:
+        - Meal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMealRequest'
+      responses:
+        '201':
+          description: Meal created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /meals/{mealId}:
+    get:
+      summary: Read meal by id
+      operationId: readMeal
+      tags:
+        - Meal
+      parameters:
+        - $ref: '#/components/parameters/MealId'
+      responses:
+        '200':
+          description: Meal returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Meal not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Update meal
+      operationId: updateMeal
+      tags:
+        - Meal
+      parameters:
+        - $ref: '#/components/parameters/MealId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMealRequest'
+      responses:
+        '200':
+          description: Meal updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Meal not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete meal
+      operationId: deleteMeal
+      tags:
+        - Meal
+      parameters:
+        - $ref: '#/components/parameters/MealId'
+      responses:
+        '204':
+          description: Meal deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Meal not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /meal-plans:
+    get:
+      summary: List meal plans
+      operationId: readMealPlans
+      tags:
+        - MealPlan
+      responses:
+        '200':
+          description: Meal plans returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MealPlan'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Create a new meal plan
+      operationId: createMealPlan
+      tags:
+        - MealPlan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMealPlanRequest'
+      responses:
+        '201':
+          description: Meal plan created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /meal-plans/{mealPlanId}:
+    get:
+      summary: Read meal plan by id
+      operationId: readMealPlan
+      tags:
+        - MealPlan
+      parameters:
+        - $ref: '#/components/parameters/MealPlanId'
+      responses:
+        '200':
+          description: Meal plan returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Meal plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Update meal plan
+      operationId: updateMealPlan
+      tags:
+        - MealPlan
+      parameters:
+        - $ref: '#/components/parameters/MealPlanId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMealPlanRequest'
+      responses:
+        '200':
+          description: Meal plan updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Meal plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete meal plan
+      operationId: deleteMealPlan
+      tags:
+        - MealPlan
+      parameters:
+        - $ref: '#/components/parameters/MealPlanId'
+      responses:
+        '204':
+          description: Meal plan deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Meal plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /meal-plans/{mealPlanId}/activate:
+    put:
+      summary: Activate a meal plan
+      operationId: activateMealPlan
+      tags:
+        - MealPlan
+      parameters:
+        - $ref: '#/components/parameters/MealPlanId'
+      responses:
+        '200':
+          description: Meal plan activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Meal plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /meal-plans/{mealPlanId}/deactivate:
+    put:
+      summary: Deactivate a meal plan
+      operationId: deactivateMealPlan
+      tags:
+        - MealPlan
+      parameters:
+        - $ref: '#/components/parameters/MealPlanId'
+      responses:
+        '200':
+          description: Meal plan deactivated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Meal plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /meal-plans/{mealPlanId}/days/{dayId}/entries:
+    post:
+      summary: Add entry to a plan day
+      operationId: addPlanEntry
+      tags:
+        - MealPlan
+      parameters:
+        - $ref: '#/components/parameters/MealPlanId'
+        - $ref: '#/components/parameters/DayId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPlanEntryRequest'
+      responses:
+        '201':
+          description: Entry added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanEntry'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Meal plan or day not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /meal-plans/{mealPlanId}/days/{dayId}/entries/{entryId}:
+    delete:
+      summary: Remove entry from a plan day
+      operationId: removePlanEntry
+      tags:
+        - MealPlan
+      parameters:
+        - $ref: '#/components/parameters/MealPlanId'
+        - $ref: '#/components/parameters/DayId'
+        - $ref: '#/components/parameters/EntryId'
+      responses:
+        '204':
+          description: Entry removed
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /food-products/{foodProductId}:
     get:
       summary: Read food product by id
@@ -280,6 +725,344 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /food-products/{foodProductId}/fridge:
+    patch:
+      summary: Set fridge status for a food product
+      operationId: setFridgeStatus
+      tags:
+        - FoodProduct
+      parameters:
+        - $ref: '#/components/parameters/FoodProductId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetFridgeStatusRequest'
+      responses:
+        '200':
+          description: Fridge status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodProduct'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Food product not found
+
+  /ai/chat:
+    post:
+      summary: Chat with AI nutrition assistant
+      operationId: aiChat
+      tags:
+        - AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiChatRequest'
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiChatResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: AI provider error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ai/chats:
+    get:
+      summary: List chat sessions
+      operationId: listChatSessions
+      tags:
+        - AI
+      responses:
+        '200':
+          description: Sessions list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatSessionSummary'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Create a new chat session
+      operationId: createChatSession
+      tags:
+        - AI
+      responses:
+        '201':
+          description: Chat session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionDetail'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ai/chats/{chatId}:
+    get:
+      summary: Get chat session with messages
+      operationId: getChatSession
+      tags:
+        - AI
+      parameters:
+        - $ref: '#/components/parameters/ChatId'
+      responses:
+        '200':
+          description: Chat session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionDetail'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete chat session
+      operationId: deleteChatSession
+      tags:
+        - AI
+      parameters:
+        - $ref: '#/components/parameters/ChatId'
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ai/chats/{chatId}/messages:
+    post:
+      summary: Send a message to a chat session
+      operationId: sendChatMessage
+      tags:
+        - AI
+      parameters:
+        - $ref: '#/components/parameters/ChatId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendChatMessageRequest'
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendChatMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: AI provider error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ai/autofill:
+    post:
+      summary: Auto-fill nutrition values by product name
+      operationId: aiAutofill
+      tags:
+        - AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiAutofillRequest'
+      responses:
+        '200':
+          description: Nutrition values
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiAutofillResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: AI provider error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /shopping-list:
+    get:
+      summary: List shopping list items
+      operationId: readShoppingList
+      tags:
+        - ShoppingList
+      responses:
+        '200':
+          description: Shopping list items returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShoppingListItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Add item to shopping list
+      operationId: addShoppingListItem
+      tags:
+        - ShoppingList
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveShoppingListItemRequest'
+      responses:
+        '201':
+          description: Item added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingListItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Clear shopping list
+      operationId: clearShoppingList
+      tags:
+        - ShoppingList
+      responses:
+        '204':
+          description: Shopping list cleared
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /shopping-list/{itemId}:
+    put:
+      summary: Update shopping list item
+      operationId: updateShoppingListItem
+      tags:
+        - ShoppingList
+      parameters:
+        - $ref: '#/components/parameters/ShoppingListItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveShoppingListItemRequest'
+      responses:
+        '200':
+          description: Item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingListItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete shopping list item
+      operationId: deleteShoppingListItem
+      tags:
+        - ShoppingList
+      parameters:
+        - $ref: '#/components/parameters/ShoppingListItemId'
+      responses:
+        '204':
+          description: Item deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -288,8 +1071,56 @@ components:
       bearerFormat: JWT
 
   parameters:
+    MealId:
+      name: mealId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+    MealPlanId:
+      name: mealPlanId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+    DayId:
+      name: dayId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+    EntryId:
+      name: entryId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
     FoodProductId:
       name: foodProductId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+    ChatId:
+      name: chatId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+    ShoppingListItemId:
+      name: itemId
       in: path
       required: true
       schema:
@@ -360,6 +1191,54 @@ components:
           minimum: 0
         photoUrl:
           type: string
+        sodiumMg:
+          type: number
+          format: double
+        potassiumMg:
+          type: number
+          format: double
+        magnesiumMg:
+          type: number
+          format: double
+        ironMg:
+          type: number
+          format: double
+        calciumMg:
+          type: number
+          format: double
+        zincMg:
+          type: number
+          format: double
+        vitaminAMcg:
+          type: number
+          format: double
+        vitaminCMg:
+          type: number
+          format: double
+        vitaminDMcg:
+          type: number
+          format: double
+        vitaminEMg:
+          type: number
+          format: double
+        vitaminKMcg:
+          type: number
+          format: double
+        vitaminB1Mg:
+          type: number
+          format: double
+        vitaminB2Mg:
+          type: number
+          format: double
+        vitaminB6Mg:
+          type: number
+          format: double
+        vitaminB9Mcg:
+          type: number
+          format: double
+        vitaminB12Mcg:
+          type: number
+          format: double
 
     UpdateFoodProductRequest:
       type: object
@@ -407,6 +1286,54 @@ components:
           minimum: 0
         photoUrl:
           type: string
+        sodiumMg:
+          type: number
+          format: double
+        potassiumMg:
+          type: number
+          format: double
+        magnesiumMg:
+          type: number
+          format: double
+        ironMg:
+          type: number
+          format: double
+        calciumMg:
+          type: number
+          format: double
+        zincMg:
+          type: number
+          format: double
+        vitaminAMcg:
+          type: number
+          format: double
+        vitaminCMg:
+          type: number
+          format: double
+        vitaminDMcg:
+          type: number
+          format: double
+        vitaminEMg:
+          type: number
+          format: double
+        vitaminKMcg:
+          type: number
+          format: double
+        vitaminB1Mg:
+          type: number
+          format: double
+        vitaminB2Mg:
+          type: number
+          format: double
+        vitaminB6Mg:
+          type: number
+          format: double
+        vitaminB9Mcg:
+          type: number
+          format: double
+        vitaminB12Mcg:
+          type: number
+          format: double
 
     UserGoal:
       type: string
@@ -415,14 +1342,37 @@ components:
         - MAINTAIN_WEIGHT
         - GAIN_MASS
 
+    Gender:
+      type: string
+      enum:
+        - MALE
+        - FEMALE
+
+    ActivityLevel:
+      type: string
+      enum:
+        - SEDENTARY
+        - LIGHTLY_ACTIVE
+        - MODERATELY_ACTIVE
+        - VERY_ACTIVE
+        - EXTRA_ACTIVE
+
     UpdateUserProfileRequest:
       type: object
       required:
         - age
         - heightCm
         - weightKg
+        - gender
+        - activityLevel
         - goal
       properties:
+        nickname:
+          type: string
+        firstName:
+          type: string
+        gender:
+          $ref: '#/components/schemas/Gender'
         age:
           type: integer
           minimum: 1
@@ -434,6 +1384,8 @@ components:
           type: number
           format: double
           minimum: 0.0001
+        activityLevel:
+          $ref: '#/components/schemas/ActivityLevel'
         goal:
           $ref: '#/components/schemas/UserGoal'
 
@@ -446,6 +1398,12 @@ components:
           readOnly: true
         email:
           type: string
+        nickname:
+          type: string
+        firstName:
+          type: string
+        gender:
+          $ref: '#/components/schemas/Gender'
         age:
           type: integer
         heightCm:
@@ -454,8 +1412,16 @@ components:
         weightKg:
           type: number
           format: double
+        activityLevel:
+          $ref: '#/components/schemas/ActivityLevel'
         goal:
           $ref: '#/components/schemas/UserGoal'
+        bmr:
+          type: number
+          format: double
+        tdee:
+          type: number
+          format: double
         targetCalories:
           type: number
           format: double
@@ -466,6 +1432,277 @@ components:
           type: number
           format: double
         targetCarbohydrates:
+          type: number
+          format: double
+
+    MealIngredientRequest:
+      type: object
+      required:
+        - foodProductId
+        - grams
+      properties:
+        foodProductId:
+          type: integer
+          format: int64
+        grams:
+          type: number
+          format: double
+          minimum: 0.0001
+
+    CreateMealRequest:
+      type: object
+      required:
+        - name
+        - servings
+        - ingredients
+      properties:
+        name:
+          type: string
+          minLength: 1
+          pattern: "^.*\\S.*$"
+        servings:
+          type: integer
+          minimum: 1
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/MealIngredientRequest'
+          minItems: 1
+
+    UpdateMealRequest:
+      type: object
+      required:
+        - name
+        - servings
+        - ingredients
+      properties:
+        name:
+          type: string
+          minLength: 1
+          pattern: "^.*\\S.*$"
+        servings:
+          type: integer
+          minimum: 1
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/MealIngredientRequest'
+          minItems: 1
+
+    MealIngredient:
+      type: object
+      properties:
+        foodProductId:
+          type: integer
+          format: int64
+        foodProductName:
+          type: string
+        grams:
+          type: number
+          format: double
+        calories:
+          type: number
+          format: double
+        protein:
+          type: number
+          format: double
+        fat:
+          type: number
+          format: double
+        carbohydrates:
+          type: number
+          format: double
+        price:
+          type: number
+          format: double
+        sodiumMg:
+          type: number
+          format: double
+        potassiumMg:
+          type: number
+          format: double
+        magnesiumMg:
+          type: number
+          format: double
+        ironMg:
+          type: number
+          format: double
+        calciumMg:
+          type: number
+          format: double
+        zincMg:
+          type: number
+          format: double
+        vitaminAMcg:
+          type: number
+          format: double
+        vitaminCMg:
+          type: number
+          format: double
+        vitaminDMcg:
+          type: number
+          format: double
+        vitaminEMg:
+          type: number
+          format: double
+        vitaminKMcg:
+          type: number
+          format: double
+        vitaminB1Mg:
+          type: number
+          format: double
+        vitaminB2Mg:
+          type: number
+          format: double
+        vitaminB6Mg:
+          type: number
+          format: double
+        vitaminB9Mcg:
+          type: number
+          format: double
+        vitaminB12Mcg:
+          type: number
+          format: double
+
+    Meal:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+        servings:
+          type: integer
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/MealIngredient'
+        totalCalories:
+          type: number
+          format: double
+        totalProtein:
+          type: number
+          format: double
+        totalFat:
+          type: number
+          format: double
+        totalCarbohydrates:
+          type: number
+          format: double
+        totalPrice:
+          type: number
+          format: double
+        caloriesPerServing:
+          type: number
+          format: double
+        proteinPerServing:
+          type: number
+          format: double
+        fatPerServing:
+          type: number
+          format: double
+        carbohydratesPerServing:
+          type: number
+          format: double
+        pricePerServing:
+          type: number
+          format: double
+        totalSodiumMg:
+          type: number
+          format: double
+        totalPotassiumMg:
+          type: number
+          format: double
+        totalMagnesiumMg:
+          type: number
+          format: double
+        totalIronMg:
+          type: number
+          format: double
+        totalCalciumMg:
+          type: number
+          format: double
+        totalZincMg:
+          type: number
+          format: double
+        totalVitaminAMcg:
+          type: number
+          format: double
+        totalVitaminCMg:
+          type: number
+          format: double
+        totalVitaminDMcg:
+          type: number
+          format: double
+        totalVitaminEMg:
+          type: number
+          format: double
+        totalVitaminKMcg:
+          type: number
+          format: double
+        totalVitaminB1Mg:
+          type: number
+          format: double
+        totalVitaminB2Mg:
+          type: number
+          format: double
+        totalVitaminB6Mg:
+          type: number
+          format: double
+        totalVitaminB9Mcg:
+          type: number
+          format: double
+        totalVitaminB12Mcg:
+          type: number
+          format: double
+        sodiumMgPerServing:
+          type: number
+          format: double
+        potassiumMgPerServing:
+          type: number
+          format: double
+        magnesiumMgPerServing:
+          type: number
+          format: double
+        ironMgPerServing:
+          type: number
+          format: double
+        calciumMgPerServing:
+          type: number
+          format: double
+        zincMgPerServing:
+          type: number
+          format: double
+        vitaminAMcgPerServing:
+          type: number
+          format: double
+        vitaminCMgPerServing:
+          type: number
+          format: double
+        vitaminDMcgPerServing:
+          type: number
+          format: double
+        vitaminEMgPerServing:
+          type: number
+          format: double
+        vitaminKMcgPerServing:
+          type: number
+          format: double
+        vitaminB1MgPerServing:
+          type: number
+          format: double
+        vitaminB2MgPerServing:
+          type: number
+          format: double
+        vitaminB6MgPerServing:
+          type: number
+          format: double
+        vitaminB9McgPerServing:
+          type: number
+          format: double
+        vitaminB12McgPerServing:
           type: number
           format: double
 
@@ -510,3 +1747,623 @@ components:
         photoUrl:
           type: string
           description: Optional product image URL.
+        sodiumMg:
+          type: number
+          format: double
+        potassiumMg:
+          type: number
+          format: double
+        magnesiumMg:
+          type: number
+          format: double
+        ironMg:
+          type: number
+          format: double
+        calciumMg:
+          type: number
+          format: double
+        zincMg:
+          type: number
+          format: double
+        vitaminAMcg:
+          type: number
+          format: double
+        vitaminCMg:
+          type: number
+          format: double
+        vitaminDMcg:
+          type: number
+          format: double
+        vitaminEMg:
+          type: number
+          format: double
+        vitaminKMcg:
+          type: number
+          format: double
+        vitaminB1Mg:
+          type: number
+          format: double
+        vitaminB2Mg:
+          type: number
+          format: double
+        vitaminB6Mg:
+          type: number
+          format: double
+        vitaminB9Mcg:
+          type: number
+          format: double
+        vitaminB12Mcg:
+          type: number
+          format: double
+        inFridge:
+          type: boolean
+          description: Whether this product is currently in the user's fridge.
+        fridgeGrams:
+          type: number
+          format: double
+          description: How many grams of this product are in the fridge.
+
+    SetFridgeStatusRequest:
+      type: object
+      required:
+        - inFridge
+      properties:
+        inFridge:
+          type: boolean
+        fridgeGrams:
+          type: number
+          format: double
+
+    MealTypeEnum:
+      type: string
+      enum:
+        - BREAKFAST
+        - LUNCH
+        - DINNER
+        - SNACK
+
+    EntryTypeEnum:
+      type: string
+      enum:
+        - MEAL
+        - FOOD_PRODUCT
+
+    CreateMealPlanRequest:
+      type: object
+      required:
+        - name
+        - startDate
+        - numberOfDays
+      properties:
+        name:
+          type: string
+          minLength: 1
+          pattern: "^.*\\S.*$"
+        startDate:
+          type: string
+          format: date
+        numberOfDays:
+          type: integer
+          minimum: 1
+          maximum: 30
+
+    UpdateMealPlanRequest:
+      type: object
+      required:
+        - name
+        - startDate
+        - numberOfDays
+      properties:
+        name:
+          type: string
+          minLength: 1
+          pattern: "^.*\\S.*$"
+        startDate:
+          type: string
+          format: date
+        numberOfDays:
+          type: integer
+          minimum: 1
+          maximum: 30
+
+    AddPlanEntryRequest:
+      type: object
+      required:
+        - mealType
+        - entryType
+      properties:
+        mealType:
+          $ref: '#/components/schemas/MealTypeEnum'
+        entryType:
+          $ref: '#/components/schemas/EntryTypeEnum'
+        mealId:
+          type: integer
+          format: int64
+        portions:
+          type: number
+          format: double
+          minimum: 0.0001
+        foodProductId:
+          type: integer
+          format: int64
+        grams:
+          type: number
+          format: double
+          minimum: 0.0001
+
+    PlanEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        mealType:
+          $ref: '#/components/schemas/MealTypeEnum'
+        entryType:
+          $ref: '#/components/schemas/EntryTypeEnum'
+        mealId:
+          type: integer
+          format: int64
+        mealName:
+          type: string
+        portions:
+          type: number
+          format: double
+        foodProductId:
+          type: integer
+          format: int64
+        foodProductName:
+          type: string
+        grams:
+          type: number
+          format: double
+        calories:
+          type: number
+          format: double
+        protein:
+          type: number
+          format: double
+        fat:
+          type: number
+          format: double
+        carbohydrates:
+          type: number
+          format: double
+        price:
+          type: number
+          format: double
+        sodiumMg:
+          type: number
+          format: double
+        potassiumMg:
+          type: number
+          format: double
+        magnesiumMg:
+          type: number
+          format: double
+        ironMg:
+          type: number
+          format: double
+        calciumMg:
+          type: number
+          format: double
+        zincMg:
+          type: number
+          format: double
+        vitaminAMcg:
+          type: number
+          format: double
+        vitaminCMg:
+          type: number
+          format: double
+        vitaminDMcg:
+          type: number
+          format: double
+        vitaminEMg:
+          type: number
+          format: double
+        vitaminKMcg:
+          type: number
+          format: double
+        vitaminB1Mg:
+          type: number
+          format: double
+        vitaminB2Mg:
+          type: number
+          format: double
+        vitaminB6Mg:
+          type: number
+          format: double
+        vitaminB9Mcg:
+          type: number
+          format: double
+        vitaminB12Mcg:
+          type: number
+          format: double
+
+    PlanDay:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        dayNumber:
+          type: integer
+        date:
+          type: string
+          format: date
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlanEntry'
+        dailyCalories:
+          type: number
+          format: double
+        dailyProtein:
+          type: number
+          format: double
+        dailyFat:
+          type: number
+          format: double
+        dailyCarbohydrates:
+          type: number
+          format: double
+        dailyPrice:
+          type: number
+          format: double
+        dailySodiumMg:
+          type: number
+          format: double
+        dailyPotassiumMg:
+          type: number
+          format: double
+        dailyMagnesiumMg:
+          type: number
+          format: double
+        dailyIronMg:
+          type: number
+          format: double
+        dailyCalciumMg:
+          type: number
+          format: double
+        dailyZincMg:
+          type: number
+          format: double
+        dailyVitaminAMcg:
+          type: number
+          format: double
+        dailyVitaminCMg:
+          type: number
+          format: double
+        dailyVitaminDMcg:
+          type: number
+          format: double
+        dailyVitaminEMg:
+          type: number
+          format: double
+        dailyVitaminKMcg:
+          type: number
+          format: double
+        dailyVitaminB1Mg:
+          type: number
+          format: double
+        dailyVitaminB2Mg:
+          type: number
+          format: double
+        dailyVitaminB6Mg:
+          type: number
+          format: double
+        dailyVitaminB9Mcg:
+          type: number
+          format: double
+        dailyVitaminB12Mcg:
+          type: number
+          format: double
+
+    MealPlan:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date
+        numberOfDays:
+          type: integer
+        isActive:
+          type: boolean
+        activatedAt:
+          type: string
+          format: date
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlanDay'
+        totalCalories:
+          type: number
+          format: double
+        totalProtein:
+          type: number
+          format: double
+        totalFat:
+          type: number
+          format: double
+        totalCarbohydrates:
+          type: number
+          format: double
+        totalPrice:
+          type: number
+          format: double
+        totalSodiumMg:
+          type: number
+          format: double
+        totalPotassiumMg:
+          type: number
+          format: double
+        totalMagnesiumMg:
+          type: number
+          format: double
+        totalIronMg:
+          type: number
+          format: double
+        totalCalciumMg:
+          type: number
+          format: double
+        totalZincMg:
+          type: number
+          format: double
+        totalVitaminAMcg:
+          type: number
+          format: double
+        totalVitaminCMg:
+          type: number
+          format: double
+        totalVitaminDMcg:
+          type: number
+          format: double
+        totalVitaminEMg:
+          type: number
+          format: double
+        totalVitaminKMcg:
+          type: number
+          format: double
+        totalVitaminB1Mg:
+          type: number
+          format: double
+        totalVitaminB2Mg:
+          type: number
+          format: double
+        totalVitaminB6Mg:
+          type: number
+          format: double
+        totalVitaminB9Mcg:
+          type: number
+          format: double
+        totalVitaminB12Mcg:
+          type: number
+          format: double
+
+    AiChatRequest:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/AiMessage'
+
+    AiMessage:
+      type: object
+      properties:
+        role:
+          type: string
+        content:
+          type: string
+
+    AiChatResponse:
+      type: object
+      properties:
+        content:
+          type: string
+
+    AiAutofillRequest:
+      type: object
+      required:
+        - productName
+      properties:
+        productName:
+          type: string
+
+    AiAutofillResponse:
+      type: object
+      properties:
+        calories:
+          type: number
+          format: double
+        protein:
+          type: number
+          format: double
+        fat:
+          type: number
+          format: double
+        carbohydrates:
+          type: number
+          format: double
+        sodiumMg:
+          type: number
+          format: double
+        potassiumMg:
+          type: number
+          format: double
+        magnesiumMg:
+          type: number
+          format: double
+        ironMg:
+          type: number
+          format: double
+        calciumMg:
+          type: number
+          format: double
+        zincMg:
+          type: number
+          format: double
+        vitaminAMcg:
+          type: number
+          format: double
+        vitaminCMg:
+          type: number
+          format: double
+        vitaminDMcg:
+          type: number
+          format: double
+        vitaminEMg:
+          type: number
+          format: double
+        vitaminKMcg:
+          type: number
+          format: double
+        vitaminB1Mg:
+          type: number
+          format: double
+        vitaminB2Mg:
+          type: number
+          format: double
+        vitaminB6Mg:
+          type: number
+          format: double
+        vitaminB9Mcg:
+          type: number
+          format: double
+        vitaminB12Mcg:
+          type: number
+          format: double
+
+    ChatSessionSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        messageCount:
+          type: integer
+
+    ChatSessionDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageItem'
+
+    ChatMessageItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        role:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    SendChatMessageRequest:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+
+    SendChatMessageResponse:
+      type: object
+      properties:
+        content:
+          type: string
+
+    ShoppingListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        foodProductId:
+          type: integer
+          format: int64
+        foodProductName:
+          type: string
+        grams:
+          type: number
+          format: double
+        caloriesPer100g:
+          type: number
+          format: double
+        proteinPer100g:
+          type: number
+          format: double
+        fatPer100g:
+          type: number
+          format: double
+        carbsPer100g:
+          type: number
+          format: double
+        pricePer100g:
+          type: number
+          format: double
+
+    SaveShoppingListItemRequest:
+      type: object
+      required:
+        - foodProductId
+        - foodProductName
+        - grams
+        - caloriesPer100g
+        - proteinPer100g
+        - fatPer100g
+        - carbsPer100g
+        - pricePer100g
+      properties:
+        foodProductId:
+          type: integer
+          format: int64
+        foodProductName:
+          type: string
+        grams:
+          type: number
+          format: double
+          minimum: 0.001
+        caloriesPer100g:
+          type: number
+          format: double
+        proteinPer100g:
+          type: number
+          format: double
+        fatPer100g:
+          type: number
+          format: double
+        carbsPer100g:
+          type: number
+          format: double
+        pricePer100g:
+          type: number
+          format: double
