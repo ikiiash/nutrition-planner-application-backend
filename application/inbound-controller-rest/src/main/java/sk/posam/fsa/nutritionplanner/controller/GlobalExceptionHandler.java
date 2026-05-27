@@ -1,6 +1,9 @@
 package sk.posam.fsa.nutritionplanner.controller;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,11 +33,37 @@ import java.util.stream.Stream;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    private final Counter errorCounter400;
+    private final Counter errorCounter404;
+    private final Counter errorCounter409;
+    private final Counter errorCounter401;
+    private final Counter errorCounter403;
+    private final Counter errorCounter500;
+
+    public GlobalExceptionHandler(MeterRegistry registry) {
+        this.errorCounter400 = Counter.builder("http.errors")
+                .tag("status", "400").description("Client validation errors").register(registry);
+        this.errorCounter404 = Counter.builder("http.errors")
+                .tag("status", "404").description("Resource not found errors").register(registry);
+        this.errorCounter409 = Counter.builder("http.errors")
+                .tag("status", "409").description("Data conflict errors").register(registry);
+        this.errorCounter401 = Counter.builder("http.errors")
+                .tag("status", "401").description("Authentication errors").register(registry);
+        this.errorCounter403 = Counter.builder("http.errors")
+                .tag("status", "403").description("Authorization errors").register(registry);
+        this.errorCounter500 = Counter.builder("http.errors")
+                .tag("status", "500").description("Internal server errors").register(registry);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
         List<String> details = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + " " + error.getDefaultMessage())
                 .toList();
+        errorCounter400.increment();
+        log.debug("Validation error on {}: {}", resolvePath(request), details);
         return new ResponseEntity<>(
                 createError("VALIDATION_ERROR", "Invalid request body", details, request),
                 HttpStatus.BAD_REQUEST);
@@ -42,6 +71,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, WebRequest request) {
+        errorCounter400.increment();
+        log.debug("Malformed JSON on {}", resolvePath(request));
         return new ResponseEntity<>(
                 createError("VALIDATION_ERROR", "Malformed JSON request body", List.of("Request body is not valid JSON"), request),
                 HttpStatus.BAD_REQUEST);
@@ -55,6 +86,8 @@ public class GlobalExceptionHandler {
                         ex.getCrossParameterValidationResults().stream())
                 .map(MessageSourceResolvable::getDefaultMessage)
                 .toList();
+        errorCounter400.increment();
+        log.debug("Handler validation error on {}: {}", resolvePath(request), details);
         return new ResponseEntity<>(
                 createError("VALIDATION_ERROR", "Invalid request parameters", details, request),
                 HttpStatus.BAD_REQUEST);
@@ -65,6 +98,8 @@ public class GlobalExceptionHandler {
         List<String> details = ex.getConstraintViolations().stream()
                 .map(violation -> violation.getPropertyPath() + " " + violation.getMessage())
                 .toList();
+        errorCounter400.increment();
+        log.debug("Constraint violation on {}: {}", resolvePath(request), details);
         return new ResponseEntity<>(
                 createError("VALIDATION_ERROR", "Invalid request parameters", details, request),
                 HttpStatus.BAD_REQUEST);
@@ -73,6 +108,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponseDto> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, WebRequest request) {
         String detail = ex.getName() + " has invalid value '" + ex.getValue() + "'";
+        errorCounter400.increment();
+        log.debug("Type mismatch on {}: {}", resolvePath(request), detail);
         return new ResponseEntity<>(
                 createError("VALIDATION_ERROR", "Invalid request parameters", List.of(detail), request),
                 HttpStatus.BAD_REQUEST);
@@ -80,6 +117,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({MissingServletRequestParameterException.class, MissingPathVariableException.class})
     public ResponseEntity<ErrorResponseDto> handleMissingParameter(Exception ex, WebRequest request) {
+        errorCounter400.increment();
+        log.debug("Missing parameter on {}: {}", resolvePath(request), ex.getMessage());
         return new ResponseEntity<>(
                 createError("VALIDATION_ERROR", "Missing required request parameters", List.of(ex.getMessage()), request),
                 HttpStatus.BAD_REQUEST);
@@ -87,6 +126,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
+        errorCounter400.increment();
+        log.debug("Illegal argument on {}: {}", resolvePath(request), ex.getMessage());
         return new ResponseEntity<>(
                 createError("VALIDATION_ERROR", ex.getMessage(), List.of(), request),
                 HttpStatus.BAD_REQUEST);
@@ -94,6 +135,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponseDto> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
+        errorCounter409.increment();
+        log.warn("Data integrity violation on {}: {}", resolvePath(request), ex.getMostSpecificCause().getMessage());
         return new ResponseEntity<>(
                 createError("CONFLICT", "Request conflicts with existing data", List.of("Duplicate or invalid database state"), request),
                 HttpStatus.CONFLICT);
@@ -101,6 +144,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FoodProductNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleFoodProductNotFound(FoodProductNotFoundException ex, WebRequest request) {
+        errorCounter404.increment();
+        log.warn("Food product not found on {}: {}", resolvePath(request), ex.getMessage());
         return new ResponseEntity<>(
                 createError("NOT_FOUND", ex.getMessage(), List.of(), request),
                 HttpStatus.NOT_FOUND);
@@ -108,6 +153,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MealNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleMealNotFound(MealNotFoundException ex, WebRequest request) {
+        errorCounter404.increment();
+        log.warn("Meal not found on {}: {}", resolvePath(request), ex.getMessage());
         return new ResponseEntity<>(
                 createError("NOT_FOUND", ex.getMessage(), List.of(), request),
                 HttpStatus.NOT_FOUND);
@@ -115,6 +162,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MealPlanNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleMealPlanNotFound(MealPlanNotFoundException ex, WebRequest request) {
+        errorCounter404.increment();
+        log.warn("Meal plan not found on {}: {}", resolvePath(request), ex.getMessage());
         return new ResponseEntity<>(
                 createError("NOT_FOUND", ex.getMessage(), List.of(), request),
                 HttpStatus.NOT_FOUND);
@@ -122,6 +171,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponseDto> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
+        errorCounter401.increment();
+        log.info("Authentication failed on {}: {}", resolvePath(request), ex.getMessage());
         return new ResponseEntity<>(
                 createError("UNAUTHORIZED", "Authentication required", List.of("Missing or invalid bearer token"), request),
                 HttpStatus.UNAUTHORIZED);
@@ -129,7 +180,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponseDto> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
-        LoggerFactory.getLogger(GlobalExceptionHandler.class).warn("Access denied: {}", ex.getMessage());
+        errorCounter403.increment();
+        log.warn("Access denied on {}: {}", resolvePath(request), ex.getMessage());
         return new ResponseEntity<>(
                 createError("FORBIDDEN", "Access denied", List.of("Insufficient permissions"), request),
                 HttpStatus.FORBIDDEN);
@@ -137,7 +189,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ErrorResponseDto> handleThrowable(Throwable ex, WebRequest request) {
-        LoggerFactory.getLogger(GlobalExceptionHandler.class).error("Global error occurred", ex);
+        errorCounter500.increment();
+        log.error("Unhandled exception on {}", resolvePath(request), ex);
         return new ResponseEntity<>(
                 createError("INTERNAL_ERROR", "Unexpected internal error", List.of("Please contact support"), request),
                 HttpStatus.INTERNAL_SERVER_ERROR);

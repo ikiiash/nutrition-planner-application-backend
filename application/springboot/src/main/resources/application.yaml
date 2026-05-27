@@ -48,3 +48,23 @@ spring:
         jwt:
           issuer-uri: http://localhost:8081/realms/NUTRITION
           jwk-set-uri: http://localhost:8081/realms/NUTRITION/protocol/openid-connect/certs
+
+---
+# Kubernetes / Azure profile — env vars injected by k8s deployment
+spring:
+  config:
+    activate:
+      on-profile: kubernetes
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI}
+          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI}
+
+openai:
+  api-key: ${OPENAI_API_KEY:}

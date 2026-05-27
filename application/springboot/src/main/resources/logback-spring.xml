@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <!-- Local development: human-readable console output -->
+  <springProfile name="!kubernetes">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n</pattern>
+      </encoder>
+    </appender>
+    <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+    </root>
+    <logger name="sk.posam.fsa" level="DEBUG"/>
+  </springProfile>
+
+  <!-- Kubernetes / production: structured JSON consumed by Grafana Alloy → Loki -->
+  <springProfile name="kubernetes">
+    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <customFields>{"app":"nutrition-planner","env":"production"}</customFields>
+        <fieldNames>
+          <timestamp>@timestamp</timestamp>
+          <version>[ignore]</version>
+        </fieldNames>
+        <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+          <maxDepthPerCause>20</maxDepthPerCause>
+          <rootCauseFirst>true</rootCauseFirst>
+        </throwableConverter>
+      </encoder>
+    </appender>
+    <root level="INFO">
+      <appender-ref ref="JSON"/>
+    </root>
+    <logger name="sk.posam.fsa" level="INFO"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.hibernate.SQL" level="WARN"/>
+  </springProfile>
+
+</configuration>
