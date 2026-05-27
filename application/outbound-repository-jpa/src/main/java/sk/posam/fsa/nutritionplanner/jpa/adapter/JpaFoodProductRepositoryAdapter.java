@@ -41,4 +41,9 @@ public class JpaFoodProductRepositoryAdapter implements FoodProductRepository {
     public void deleteById(String ownerUserId, Long foodProductId) {
         readById(ownerUserId, foodProductId).ifPresent(foodProductSpringDataRepository::delete);
     }
+
+    @Override
+    public List<FoodProduct> readAllInFridge(String ownerUserId) {
+        return foodProductSpringDataRepository.findAllByOwnerUserIdAndInFridgeTrue(ownerUserId);
+    }
 }

@@ -13,4 +13,6 @@ public interface FoodProductSpringDataRepository extends JpaRepository<FoodProdu
     List<FoodProduct> findByOwnerUserIdAndNameContainingIgnoreCase(String ownerUserId, String name);
 
     Optional<FoodProduct> findByIdAndOwnerUserId(Long id, String ownerUserId);
+
+    List<FoodProduct> findAllByOwnerUserIdAndInFridgeTrue(String ownerUserId);
 }

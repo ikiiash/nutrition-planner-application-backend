@@ -9,6 +9,7 @@ import sk.posam.fsa.nutritionplanner.mapper.FoodProductMapper;
 import sk.posam.fsa.nutritionplanner.rest.api.FoodProductApi;
 import sk.posam.fsa.nutritionplanner.rest.dto.CreateFoodProductRequestDto;
 import sk.posam.fsa.nutritionplanner.rest.dto.FoodProductDto;
+import sk.posam.fsa.nutritionplanner.rest.dto.SetFridgeStatusRequestDto;
 import sk.posam.fsa.nutritionplanner.rest.dto.UpdateFoodProductRequestDto;
 import sk.posam.fsa.nutritionplanner.security.CurrentUserProvider;
 
@@ -64,5 +65,15 @@ public class FoodProductRestController implements FoodProductApi {
         FoodProduct foodProduct = foodProductMapper.toDomain(updateFoodProductRequestDto);
         FoodProduct updatedFoodProduct = foodProductFacade.updateFoodProduct(currentUserProvider.getUserId(), foodProductId, foodProduct);
         return ResponseEntity.ok(foodProductMapper.toDto(updatedFoodProduct));
+    }
+
+    @Override
+    public ResponseEntity<FoodProductDto> setFridgeStatus(Long foodProductId,
+                                                          SetFridgeStatusRequestDto setFridgeStatusRequestDto) {
+        FoodProduct updated = foodProductFacade.setFridgeStatus(
+                currentUserProvider.getUserId(), foodProductId,
+                Boolean.TRUE.equals(setFridgeStatusRequestDto.getInFridge()),
+                setFridgeStatusRequestDto.getFridgeGrams());
+        return ResponseEntity.ok(foodProductMapper.toDto(updated));
     }
 }

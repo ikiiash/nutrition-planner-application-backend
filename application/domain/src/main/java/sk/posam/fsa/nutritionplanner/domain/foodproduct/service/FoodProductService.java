@@ -49,4 +49,12 @@ public class FoodProductService implements FoodProductFacade {
         readFoodProduct(ownerUserId, foodProductId);
         foodProductRepository.deleteById(ownerUserId, foodProductId);
     }
+
+    @Override
+    public FoodProduct setFridgeStatus(String ownerUserId, Long foodProductId, boolean inFridge, Double fridgeGrams) {
+        FoodProduct product = readFoodProduct(ownerUserId, foodProductId);
+        product.setInFridge(inFridge);
+        product.setFridgeGrams(inFridge ? fridgeGrams : null);
+        return foodProductRepository.save(product);
+    }
 }

@@ -15,4 +15,6 @@ public interface FoodProductFacade {
     FoodProduct updateFoodProduct(String ownerUserId, Long foodProductId, FoodProduct foodProduct);
 
     void deleteFoodProduct(String ownerUserId, Long foodProductId);
+
+    FoodProduct setFridgeStatus(String ownerUserId, Long foodProductId, boolean inFridge, Double fridgeGrams);
 }

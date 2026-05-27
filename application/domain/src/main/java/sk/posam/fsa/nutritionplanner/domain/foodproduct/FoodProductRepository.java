@@ -14,4 +14,6 @@ public interface FoodProductRepository {
     Optional<FoodProduct> readById(String ownerUserId, Long foodProductId);
 
     void deleteById(String ownerUserId, Long foodProductId);
+
+    List<FoodProduct> readAllInFridge(String ownerUserId);
 }
