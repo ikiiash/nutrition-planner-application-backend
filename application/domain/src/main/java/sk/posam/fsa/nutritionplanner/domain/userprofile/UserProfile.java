@@ -7,40 +7,22 @@ public class UserProfile {
     private Long id;
     private String keycloakUserId;
     private String email;
+    private String nickname;
+    private String firstName;
+    private Gender gender;
     private Integer age;
     private Double heightCm;
     private Double weightKg;
+    private ActivityLevel activityLevel;
     private UserGoal goal;
+    private Double bmr;
+    private Double tdee;
     private Double targetCalories;
     private Double targetProtein;
     private Double targetFat;
     private Double targetCarbohydrates;
 
     public UserProfile() {
-    }
-
-    public UserProfile(Long id,
-                       String keycloakUserId,
-                       String email,
-                       Integer age,
-                       Double heightCm,
-                       Double weightKg,
-                       UserGoal goal,
-                       Double targetCalories,
-                       Double targetProtein,
-                       Double targetFat,
-                       Double targetCarbohydrates) {
-        this.id = id;
-        this.keycloakUserId = keycloakUserId;
-        this.email = email;
-        this.age = age;
-        this.heightCm = heightCm;
-        this.weightKg = weightKg;
-        this.goal = goal;
-        this.targetCalories = targetCalories;
-        this.targetProtein = targetProtein;
-        this.targetFat = targetFat;
-        this.targetCarbohydrates = targetCarbohydrates;
     }
 
     public void validateForUpdate() {
@@ -56,119 +38,77 @@ public class UserProfile {
         if (weightKg == null || weightKg <= 0) {
             throw new IllegalArgumentException("Weight must be greater than zero.");
         }
+        if (gender == null) {
+            throw new IllegalArgumentException("Gender must be specified.");
+        }
+        if (activityLevel == null) {
+            throw new IllegalArgumentException("Activity level must be specified.");
+        }
         if (goal == null) {
             throw new IllegalArgumentException("User goal must be specified.");
         }
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getKeycloakUserId() { return keycloakUserId; }
+    public void setKeycloakUserId(String keycloakUserId) { this.keycloakUserId = keycloakUserId; }
 
-    public String getKeycloakUserId() {
-        return keycloakUserId;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setKeycloakUserId(String keycloakUserId) {
-        this.keycloakUserId = keycloakUserId;
-    }
+    public String getNickname() { return nickname; }
+    public void setNickname(String nickname) { this.nickname = nickname; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public Gender getGender() { return gender; }
+    public void setGender(Gender gender) { this.gender = gender; }
 
-    public Integer getAge() {
-        return age;
-    }
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+    public Double getHeightCm() { return heightCm; }
+    public void setHeightCm(Double heightCm) { this.heightCm = heightCm; }
 
-    public Double getHeightCm() {
-        return heightCm;
-    }
+    public Double getWeightKg() { return weightKg; }
+    public void setWeightKg(Double weightKg) { this.weightKg = weightKg; }
 
-    public void setHeightCm(Double heightCm) {
-        this.heightCm = heightCm;
-    }
+    public ActivityLevel getActivityLevel() { return activityLevel; }
+    public void setActivityLevel(ActivityLevel activityLevel) { this.activityLevel = activityLevel; }
 
-    public Double getWeightKg() {
-        return weightKg;
-    }
+    public UserGoal getGoal() { return goal; }
+    public void setGoal(UserGoal goal) { this.goal = goal; }
 
-    public void setWeightKg(Double weightKg) {
-        this.weightKg = weightKg;
-    }
+    public Double getBmr() { return bmr; }
+    public void setBmr(Double bmr) { this.bmr = bmr; }
 
-    public UserGoal getGoal() {
-        return goal;
-    }
+    public Double getTdee() { return tdee; }
+    public void setTdee(Double tdee) { this.tdee = tdee; }
 
-    public void setGoal(UserGoal goal) {
-        this.goal = goal;
-    }
+    public Double getTargetCalories() { return targetCalories; }
+    public void setTargetCalories(Double targetCalories) { this.targetCalories = targetCalories; }
 
-    public Double getTargetCalories() {
-        return targetCalories;
-    }
+    public Double getTargetProtein() { return targetProtein; }
+    public void setTargetProtein(Double targetProtein) { this.targetProtein = targetProtein; }
 
-    public void setTargetCalories(Double targetCalories) {
-        this.targetCalories = targetCalories;
-    }
+    public Double getTargetFat() { return targetFat; }
+    public void setTargetFat(Double targetFat) { this.targetFat = targetFat; }
 
-    public Double getTargetProtein() {
-        return targetProtein;
-    }
-
-    public void setTargetProtein(Double targetProtein) {
-        this.targetProtein = targetProtein;
-    }
-
-    public Double getTargetFat() {
-        return targetFat;
-    }
-
-    public void setTargetFat(Double targetFat) {
-        this.targetFat = targetFat;
-    }
-
-    public Double getTargetCarbohydrates() {
-        return targetCarbohydrates;
-    }
-
-    public void setTargetCarbohydrates(Double targetCarbohydrates) {
-        this.targetCarbohydrates = targetCarbohydrates;
-    }
+    public Double getTargetCarbohydrates() { return targetCarbohydrates; }
+    public void setTargetCarbohydrates(Double targetCarbohydrates) { this.targetCarbohydrates = targetCarbohydrates; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserProfile that)) return false;
-        return Objects.equals(id, that.id)
-                && Objects.equals(keycloakUserId, that.keycloakUserId)
-                && Objects.equals(email, that.email)
-                && Objects.equals(age, that.age)
-                && Objects.equals(heightCm, that.heightCm)
-                && Objects.equals(weightKg, that.weightKg)
-                && goal == that.goal
-                && Objects.equals(targetCalories, that.targetCalories)
-                && Objects.equals(targetProtein, that.targetProtein)
-                && Objects.equals(targetFat, that.targetFat)
-                && Objects.equals(targetCarbohydrates, that.targetCarbohydrates);
+        return Objects.equals(id, that.id) && Objects.equals(keycloakUserId, that.keycloakUserId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, keycloakUserId, email, age, heightCm, weightKg, goal, targetCalories, targetProtein,
-                targetFat, targetCarbohydrates);
+        return Objects.hash(id, keycloakUserId);
     }
 }
