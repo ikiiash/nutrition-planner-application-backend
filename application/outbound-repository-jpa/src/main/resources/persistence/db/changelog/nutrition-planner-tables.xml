@@ -51,6 +51,17 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="nutrition-planner-tables-1.3" author="codex">
+        <addColumn tableName="user_profile">
+            <column name="nickname" type="VARCHAR(100)"/>
+            <column name="first_name" type="VARCHAR(100)"/>
+            <column name="gender" type="VARCHAR(16)"/>
+            <column name="activity_level" type="VARCHAR(32)"/>
+            <column name="bmr" type="DOUBLE PRECISION"/>
+            <column name="tdee" type="DOUBLE PRECISION"/>
+        </addColumn>
+    </changeSet>
+
     <changeSet id="nutrition-planner-tables-1.2" author="codex">
         <addColumn tableName="food_product">
             <column name="owner_user_id" type="VARCHAR(255)" defaultValue="legacy-user">
@@ -68,4 +79,311 @@
             <column name="owner_user_id"/>
         </createIndex>
     </changeSet>
+
+    <changeSet id="nutrition-planner-tables-2.0" author="codex">
+        <createTable tableName="meal">
+            <column name="meal_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="owner_user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="servings" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="meal" indexName="idx_meal_owner_user_id">
+            <column name="owner_user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-2.1" author="codex">
+        <createTable tableName="meal_ingredient">
+            <column name="meal_ingredient_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="meal_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_meal_ingredient_meal"
+                             references="meal(meal_id)"/>
+            </column>
+            <column name="food_product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="food_product_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="grams" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="calories_per_gram" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="protein_per_gram" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fat_per_gram" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="carbohydrates_per_gram" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_per_gram" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="nutrition-planner-tables-3.0" author="codex">
+        <createTable tableName="meal_plan">
+            <column name="meal_plan_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="owner_user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number_of_days" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="meal_plan" indexName="idx_meal_plan_owner_user_id">
+            <column name="owner_user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-3.1" author="codex">
+        <createTable tableName="plan_day">
+            <column name="plan_day_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="meal_plan_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_plan_day_meal_plan"
+                             references="meal_plan(meal_plan_id)"/>
+            </column>
+            <column name="day_number" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-3.2" author="codex">
+        <createTable tableName="plan_entry">
+            <column name="plan_entry_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="plan_day_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_plan_entry_plan_day"
+                             references="plan_day(plan_day_id)"/>
+            </column>
+            <column name="meal_type" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entry_type" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meal_id" type="BIGINT"/>
+            <column name="meal_name" type="VARCHAR(255)"/>
+            <column name="portions" type="DOUBLE PRECISION"/>
+            <column name="food_product_id" type="BIGINT"/>
+            <column name="food_product_name" type="VARCHAR(255)"/>
+            <column name="grams" type="DOUBLE PRECISION"/>
+            <column name="calories" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="protein" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fat" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="carbohydrates" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-1.4" author="codex">
+        <addColumn tableName="food_product">
+            <column name="sodium_mg" type="DOUBLE PRECISION"/>
+            <column name="potassium_mg" type="DOUBLE PRECISION"/>
+            <column name="magnesium_mg" type="DOUBLE PRECISION"/>
+            <column name="iron_mg" type="DOUBLE PRECISION"/>
+            <column name="calcium_mg" type="DOUBLE PRECISION"/>
+            <column name="zinc_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_a_mcg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_c_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_d_mcg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_e_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_k_mcg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b1_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b2_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b6_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b9_mcg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b12_mcg" type="DOUBLE PRECISION"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-2.2" author="codex">
+        <addColumn tableName="meal_ingredient">
+            <column name="sodium_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="potassium_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="magnesium_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="iron_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="calcium_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="zinc_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_a_mcg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_c_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_d_mcg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_e_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_k_mcg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b1_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b2_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b6_mg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b9_mcg_per_gram" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b12_mcg_per_gram" type="DOUBLE PRECISION"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-3.3" author="codex">
+        <addColumn tableName="plan_entry">
+            <column name="sodium_mg" type="DOUBLE PRECISION"/>
+            <column name="potassium_mg" type="DOUBLE PRECISION"/>
+            <column name="magnesium_mg" type="DOUBLE PRECISION"/>
+            <column name="iron_mg" type="DOUBLE PRECISION"/>
+            <column name="calcium_mg" type="DOUBLE PRECISION"/>
+            <column name="zinc_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_a_mcg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_c_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_d_mcg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_e_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_k_mcg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b1_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b2_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b6_mg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b9_mcg" type="DOUBLE PRECISION"/>
+            <column name="vitamin_b12_mcg" type="DOUBLE PRECISION"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="nutrition-planner-tables-3.4" author="codex">
+        <addColumn tableName="meal_plan">
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activated_at" type="DATE"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="nutrition-planner-tables-4.0" author="codex">
+        <createTable tableName="chat_session">
+            <column name="chat_session_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="owner_user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="chat_session" indexName="idx_chat_session_owner_user_id">
+            <column name="owner_user_id"/>
+        </createIndex>
+
+        <createTable tableName="chat_message">
+            <column name="chat_message_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="chat_session_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_chat_message_session"
+                             references="chat_session(chat_session_id)"/>
+            </column>
+            <column name="role" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="chat_message" indexName="idx_chat_message_session_id">
+            <column name="chat_session_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-5.0" author="codex">
+        <addColumn tableName="food_product">
+            <column name="in_fridge" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-5.1" author="codex">
+        <addColumn tableName="food_product">
+            <column name="fridge_grams" type="DOUBLE PRECISION"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="nutrition-planner-tables-6.0" author="codex">
+        <createTable tableName="shopping_list_item">
+            <column name="shopping_list_item_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="owner_user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="food_product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="food_product_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="grams" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="calories_per_100g" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="protein_per_100g" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fat_per_100g" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="carbs_per_100g" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_per_100g" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="shopping_list_item" indexName="idx_shopping_list_owner_user_id">
+            <column name="owner_user_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

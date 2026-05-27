@@ -43,6 +43,60 @@
             <basic name="photoUrl">
                 <column name="photo_url"/>
             </basic>
+            <basic name="sodiumMg">
+                <column name="sodium_mg"/>
+            </basic>
+            <basic name="potassiumMg">
+                <column name="potassium_mg"/>
+            </basic>
+            <basic name="magnesiumMg">
+                <column name="magnesium_mg"/>
+            </basic>
+            <basic name="ironMg">
+                <column name="iron_mg"/>
+            </basic>
+            <basic name="calciumMg">
+                <column name="calcium_mg"/>
+            </basic>
+            <basic name="zincMg">
+                <column name="zinc_mg"/>
+            </basic>
+            <basic name="vitaminAMcg">
+                <column name="vitamin_a_mcg"/>
+            </basic>
+            <basic name="vitaminCMg">
+                <column name="vitamin_c_mg"/>
+            </basic>
+            <basic name="vitaminDMcg">
+                <column name="vitamin_d_mcg"/>
+            </basic>
+            <basic name="vitaminEMg">
+                <column name="vitamin_e_mg"/>
+            </basic>
+            <basic name="vitaminKMcg">
+                <column name="vitamin_k_mcg"/>
+            </basic>
+            <basic name="vitaminB1Mg">
+                <column name="vitamin_b1_mg"/>
+            </basic>
+            <basic name="vitaminB2Mg">
+                <column name="vitamin_b2_mg"/>
+            </basic>
+            <basic name="vitaminB6Mg">
+                <column name="vitamin_b6_mg"/>
+            </basic>
+            <basic name="vitaminB9Mcg">
+                <column name="vitamin_b9_mcg"/>
+            </basic>
+            <basic name="vitaminB12Mcg">
+                <column name="vitamin_b12_mcg"/>
+            </basic>
+            <basic name="inFridge">
+                <column name="in_fridge" nullable="false"/>
+            </basic>
+            <basic name="fridgeGrams">
+                <column name="fridge_grams" nullable="true"/>
+            </basic>
         </attributes>
     </entity>
 
@@ -61,6 +115,16 @@
             <basic name="email">
                 <column name="email"/>
             </basic>
+            <basic name="nickname">
+                <column name="nickname"/>
+            </basic>
+            <basic name="firstName">
+                <column name="first_name"/>
+            </basic>
+            <basic name="gender">
+                <column name="gender"/>
+                <enumerated>STRING</enumerated>
+            </basic>
             <basic name="age">
                 <column name="age"/>
             </basic>
@@ -70,9 +134,19 @@
             <basic name="weightKg">
                 <column name="weight_kg"/>
             </basic>
+            <basic name="activityLevel">
+                <column name="activity_level"/>
+                <enumerated>STRING</enumerated>
+            </basic>
             <basic name="goal">
                 <column name="goal"/>
                 <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="bmr">
+                <column name="bmr"/>
+            </basic>
+            <basic name="tdee">
+                <column name="tdee"/>
             </basic>
             <basic name="targetCalories">
                 <column name="target_calories"/>
@@ -85,6 +159,369 @@
             </basic>
             <basic name="targetCarbohydrates">
                 <column name="target_carbohydrates"/>
+            </basic>
+        </attributes>
+    </entity>
+
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.meal.Meal" access="FIELD">
+        <table name="meal"/>
+
+        <attributes>
+            <id name="id">
+                <column name="meal_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="ownerUserId">
+                <column name="owner_user_id" nullable="false"/>
+            </basic>
+            <basic name="name">
+                <column name="name" nullable="false"/>
+            </basic>
+            <basic name="servings">
+                <column name="servings" nullable="false"/>
+            </basic>
+            <one-to-many name="ingredients" fetch="EAGER" orphan-removal="true">
+                <join-column name="meal_id" nullable="false"/>
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+                <order-by>id ASC</order-by>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.meal.MealIngredient" access="FIELD">
+        <table name="meal_ingredient"/>
+
+        <attributes>
+            <id name="id">
+                <column name="meal_ingredient_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="foodProductId">
+                <column name="food_product_id" nullable="false"/>
+            </basic>
+            <basic name="foodProductName">
+                <column name="food_product_name" nullable="false"/>
+            </basic>
+            <basic name="grams">
+                <column name="grams" nullable="false"/>
+            </basic>
+            <basic name="caloriesPerGram">
+                <column name="calories_per_gram" nullable="false"/>
+            </basic>
+            <basic name="proteinPerGram">
+                <column name="protein_per_gram" nullable="false"/>
+            </basic>
+            <basic name="fatPerGram">
+                <column name="fat_per_gram" nullable="false"/>
+            </basic>
+            <basic name="carbohydratesPerGram">
+                <column name="carbohydrates_per_gram" nullable="false"/>
+            </basic>
+            <basic name="pricePerGram">
+                <column name="price_per_gram" nullable="false"/>
+            </basic>
+            <basic name="sodiumMgPerGram">
+                <column name="sodium_mg_per_gram"/>
+            </basic>
+            <basic name="potassiumMgPerGram">
+                <column name="potassium_mg_per_gram"/>
+            </basic>
+            <basic name="magnesiumMgPerGram">
+                <column name="magnesium_mg_per_gram"/>
+            </basic>
+            <basic name="ironMgPerGram">
+                <column name="iron_mg_per_gram"/>
+            </basic>
+            <basic name="calciumMgPerGram">
+                <column name="calcium_mg_per_gram"/>
+            </basic>
+            <basic name="zincMgPerGram">
+                <column name="zinc_mg_per_gram"/>
+            </basic>
+            <basic name="vitaminAMcgPerGram">
+                <column name="vitamin_a_mcg_per_gram"/>
+            </basic>
+            <basic name="vitaminCMgPerGram">
+                <column name="vitamin_c_mg_per_gram"/>
+            </basic>
+            <basic name="vitaminDMcgPerGram">
+                <column name="vitamin_d_mcg_per_gram"/>
+            </basic>
+            <basic name="vitaminEMgPerGram">
+                <column name="vitamin_e_mg_per_gram"/>
+            </basic>
+            <basic name="vitaminKMcgPerGram">
+                <column name="vitamin_k_mcg_per_gram"/>
+            </basic>
+            <basic name="vitaminB1MgPerGram">
+                <column name="vitamin_b1_mg_per_gram"/>
+            </basic>
+            <basic name="vitaminB2MgPerGram">
+                <column name="vitamin_b2_mg_per_gram"/>
+            </basic>
+            <basic name="vitaminB6MgPerGram">
+                <column name="vitamin_b6_mg_per_gram"/>
+            </basic>
+            <basic name="vitaminB9McgPerGram">
+                <column name="vitamin_b9_mcg_per_gram"/>
+            </basic>
+            <basic name="vitaminB12McgPerGram">
+                <column name="vitamin_b12_mcg_per_gram"/>
+            </basic>
+        </attributes>
+    </entity>
+
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.mealplan.MealPlan" access="FIELD">
+        <table name="meal_plan"/>
+
+        <attributes>
+            <id name="id">
+                <column name="meal_plan_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="ownerUserId">
+                <column name="owner_user_id" nullable="false"/>
+            </basic>
+            <basic name="name">
+                <column name="name" nullable="false"/>
+            </basic>
+            <basic name="startDate">
+                <column name="start_date" nullable="false"/>
+            </basic>
+            <basic name="numberOfDays">
+                <column name="number_of_days" nullable="false"/>
+            </basic>
+            <basic name="active">
+                <column name="is_active" nullable="false"/>
+            </basic>
+            <basic name="activatedAt">
+                <column name="activated_at"/>
+            </basic>
+            <one-to-many name="days" fetch="EAGER" orphan-removal="true">
+                <join-column name="meal_plan_id" nullable="false"/>
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+                <order-by>dayNumber ASC</order-by>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.mealplan.PlanDay" access="FIELD">
+        <table name="plan_day"/>
+
+        <attributes>
+            <id name="id">
+                <column name="plan_day_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="dayNumber">
+                <column name="day_number" nullable="false"/>
+            </basic>
+            <one-to-many name="entries" fetch="EAGER" orphan-removal="true">
+                <join-column name="plan_day_id" nullable="false"/>
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+                <order-by>id ASC</order-by>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.mealplan.PlanEntry" access="FIELD">
+        <table name="plan_entry"/>
+
+        <attributes>
+            <id name="id">
+                <column name="plan_entry_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="mealType">
+                <column name="meal_type" nullable="false"/>
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="entryType">
+                <column name="entry_type" nullable="false"/>
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="mealId">
+                <column name="meal_id"/>
+            </basic>
+            <basic name="mealName">
+                <column name="meal_name"/>
+            </basic>
+            <basic name="portions">
+                <column name="portions"/>
+            </basic>
+            <basic name="foodProductId">
+                <column name="food_product_id"/>
+            </basic>
+            <basic name="foodProductName">
+                <column name="food_product_name"/>
+            </basic>
+            <basic name="grams">
+                <column name="grams"/>
+            </basic>
+            <basic name="calories">
+                <column name="calories" nullable="false"/>
+            </basic>
+            <basic name="protein">
+                <column name="protein" nullable="false"/>
+            </basic>
+            <basic name="fat">
+                <column name="fat" nullable="false"/>
+            </basic>
+            <basic name="carbohydrates">
+                <column name="carbohydrates" nullable="false"/>
+            </basic>
+            <basic name="price">
+                <column name="price" nullable="false"/>
+            </basic>
+            <basic name="sodiumMg">
+                <column name="sodium_mg"/>
+            </basic>
+            <basic name="potassiumMg">
+                <column name="potassium_mg"/>
+            </basic>
+            <basic name="magnesiumMg">
+                <column name="magnesium_mg"/>
+            </basic>
+            <basic name="ironMg">
+                <column name="iron_mg"/>
+            </basic>
+            <basic name="calciumMg">
+                <column name="calcium_mg"/>
+            </basic>
+            <basic name="zincMg">
+                <column name="zinc_mg"/>
+            </basic>
+            <basic name="vitaminAMcg">
+                <column name="vitamin_a_mcg"/>
+            </basic>
+            <basic name="vitaminCMg">
+                <column name="vitamin_c_mg"/>
+            </basic>
+            <basic name="vitaminDMcg">
+                <column name="vitamin_d_mcg"/>
+            </basic>
+            <basic name="vitaminEMg">
+                <column name="vitamin_e_mg"/>
+            </basic>
+            <basic name="vitaminKMcg">
+                <column name="vitamin_k_mcg"/>
+            </basic>
+            <basic name="vitaminB1Mg">
+                <column name="vitamin_b1_mg"/>
+            </basic>
+            <basic name="vitaminB2Mg">
+                <column name="vitamin_b2_mg"/>
+            </basic>
+            <basic name="vitaminB6Mg">
+                <column name="vitamin_b6_mg"/>
+            </basic>
+            <basic name="vitaminB9Mcg">
+                <column name="vitamin_b9_mcg"/>
+            </basic>
+            <basic name="vitaminB12Mcg">
+                <column name="vitamin_b12_mcg"/>
+            </basic>
+        </attributes>
+    </entity>
+
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.ai.ChatSession" access="FIELD">
+        <table name="chat_session"/>
+
+        <attributes>
+            <id name="id">
+                <column name="chat_session_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="ownerUserId">
+                <column name="owner_user_id" nullable="false"/>
+            </basic>
+            <basic name="title">
+                <column name="title" nullable="false"/>
+            </basic>
+            <basic name="createdAt">
+                <column name="created_at" nullable="false"/>
+            </basic>
+            <one-to-many name="messages" fetch="EAGER" orphan-removal="true">
+                <join-column name="chat_session_id" nullable="false"/>
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+                <order-by>createdAt ASC</order-by>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.ai.ChatMessage" access="FIELD">
+        <table name="chat_message"/>
+
+        <attributes>
+            <id name="id">
+                <column name="chat_message_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="role">
+                <column name="role" nullable="false"/>
+            </basic>
+            <basic name="content">
+                <column name="content" nullable="false"/>
+            </basic>
+            <basic name="createdAt">
+                <column name="created_at" nullable="false"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="sk.posam.fsa.nutritionplanner.domain.shoppinglist.ShoppingListItem" access="FIELD">
+        <table name="shopping_list_item"/>
+
+        <attributes>
+            <id name="id">
+                <column name="shopping_list_item_id"/>
+                <generated-value strategy="IDENTITY"/>
+            </id>
+
+            <basic name="ownerUserId">
+                <column name="owner_user_id" nullable="false"/>
+            </basic>
+            <basic name="foodProductId">
+                <column name="food_product_id" nullable="false"/>
+            </basic>
+            <basic name="foodProductName">
+                <column name="food_product_name" nullable="false"/>
+            </basic>
+            <basic name="grams">
+                <column name="grams" nullable="false"/>
+            </basic>
+            <basic name="caloriesPer100g">
+                <column name="calories_per_100g" nullable="false"/>
+            </basic>
+            <basic name="proteinPer100g">
+                <column name="protein_per_100g" nullable="false"/>
+            </basic>
+            <basic name="fatPer100g">
+                <column name="fat_per_100g" nullable="false"/>
+            </basic>
+            <basic name="carbsPer100g">
+                <column name="carbs_per_100g" nullable="false"/>
+            </basic>
+            <basic name="pricePer100g">
+                <column name="price_per_100g" nullable="false"/>
             </basic>
         </attributes>
     </entity>
