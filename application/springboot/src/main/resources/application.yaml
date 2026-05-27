@@ -1,9 +1,12 @@
+openai:
+  api-key: ${OPENAI_API_KEY:}
+
 spring:
   application:
     name: nutrition-planner
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/nutrition_planner
+    url: jdbc:postgresql://localhost:5433/nutrition_planner
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
