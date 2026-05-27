@@ -26,8 +26,13 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/food-products/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
                         .requestMatchers(HttpMethod.PUT, "/food-products/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
                         .requestMatchers(HttpMethod.DELETE, "/food-products/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
+                        .requestMatchers(HttpMethod.PATCH, "/food-products/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
+                        .requestMatchers("/shopping-list/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
                         .requestMatchers(HttpMethod.GET, "/user-profile/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
                         .requestMatchers(HttpMethod.PUT, "/user-profile/**").hasAnyRole("ADMIN", "USER", "PREMIUM_USER")
+                        .requestMatchers(HttpMethod.POST, "/ai/chat").hasAnyRole("ADMIN", "PREMIUM_USER")
+                        .requestMatchers(HttpMethod.POST, "/ai/autofill").hasAnyRole("ADMIN", "PREMIUM_USER")
+                        .requestMatchers("/ai/chats/**").hasAnyRole("ADMIN", "PREMIUM_USER")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling

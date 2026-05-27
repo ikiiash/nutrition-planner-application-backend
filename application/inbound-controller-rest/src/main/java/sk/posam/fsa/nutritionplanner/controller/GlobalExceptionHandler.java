@@ -19,6 +19,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import sk.posam.fsa.nutritionplanner.domain.foodproduct.FoodProductNotFoundException;
+import sk.posam.fsa.nutritionplanner.domain.meal.MealNotFoundException;
+import sk.posam.fsa.nutritionplanner.domain.mealplan.MealPlanNotFoundException;
 import sk.posam.fsa.nutritionplanner.rest.dto.ErrorResponseDto;
 
 import java.time.OffsetDateTime;
@@ -99,6 +101,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FoodProductNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleFoodProductNotFound(FoodProductNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(
+                createError("NOT_FOUND", ex.getMessage(), List.of(), request),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MealNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleMealNotFound(MealNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(
+                createError("NOT_FOUND", ex.getMessage(), List.of(), request),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MealPlanNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleMealPlanNotFound(MealPlanNotFoundException ex, WebRequest request) {
         return new ResponseEntity<>(
                 createError("NOT_FOUND", ex.getMessage(), List.of(), request),
                 HttpStatus.NOT_FOUND);
