@@ -2081,6 +2081,8 @@ components:
         activatedAt:
           type: string
           format: date
+        lastDeductedDayNumber:
+          type: integer
         days:
           type: array
           items:

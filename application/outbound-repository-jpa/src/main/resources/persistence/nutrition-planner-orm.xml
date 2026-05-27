@@ -304,6 +304,9 @@
             <basic name="activatedAt">
                 <column name="activated_at"/>
             </basic>
+            <basic name="lastDeductedDayNumber">
+                <column name="last_deducted_day_number" nullable="false"/>
+            </basic>
             <one-to-many name="days" fetch="EAGER" orphan-removal="true">
                 <join-column name="meal_plan_id" nullable="false"/>
                 <cascade>

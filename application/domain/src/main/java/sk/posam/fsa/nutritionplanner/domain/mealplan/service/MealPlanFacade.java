@@ -21,6 +21,8 @@ public interface MealPlanFacade {
 
     MealPlan deactivateMealPlan(String ownerUserId, Long mealPlanId);
 
+    MealPlan deductFridge(String ownerUserId, Long mealPlanId);
+
     PlanEntry addEntry(String ownerUserId, Long mealPlanId, Long dayId, PlanEntry entry);
 
     void removeEntry(String ownerUserId, Long mealPlanId, Long dayId, Long entryId);

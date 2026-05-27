@@ -15,6 +15,7 @@ public class MealPlan {
     private List<PlanDay> days = new ArrayList<>();
     private boolean active = false;
     private LocalDate activatedAt;
+    private int lastDeductedDayNumber = 0;
 
     public MealPlan() {
     }
@@ -57,6 +58,9 @@ public class MealPlan {
 
     public LocalDate getActivatedAt() { return activatedAt; }
     public void setActivatedAt(LocalDate activatedAt) { this.activatedAt = activatedAt; }
+
+    public int getLastDeductedDayNumber() { return lastDeductedDayNumber; }
+    public void setLastDeductedDayNumber(int lastDeductedDayNumber) { this.lastDeductedDayNumber = lastDeductedDayNumber; }
 
     @Override
     public boolean equals(Object o) {

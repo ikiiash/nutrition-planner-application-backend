@@ -55,6 +55,7 @@ public class MealPlanMapper {
         dto.setNumberOfDays(plan.getNumberOfDays());
         dto.setIsActive(plan.isActive());
         dto.setActivatedAt(plan.getActivatedAt());
+        dto.setLastDeductedDayNumber(plan.getLastDeductedDayNumber());
 
         List<PlanDayDto> dayDtos = plan.getDays().stream()
                 .map(d -> toDayDto(d, plan.getStartDate()))

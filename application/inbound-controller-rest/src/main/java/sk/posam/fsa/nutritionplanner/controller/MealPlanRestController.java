@@ -3,6 +3,7 @@ package sk.posam.fsa.nutritionplanner.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sk.posam.fsa.nutritionplanner.domain.mealplan.MealPlan;
@@ -77,6 +78,12 @@ public class MealPlanRestController implements MealPlanApi {
     @PutMapping("/meal-plans/{mealPlanId}/deactivate")
     public ResponseEntity<MealPlanDto> deactivateMealPlan(@PathVariable("mealPlanId") Long mealPlanId) {
         MealPlan plan = mealPlanFacade.deactivateMealPlan(currentUserProvider.getUserId(), mealPlanId);
+        return ResponseEntity.ok(mealPlanMapper.toDto(plan));
+    }
+
+    @PostMapping("/meal-plans/{mealPlanId}/deduct-fridge")
+    public ResponseEntity<MealPlanDto> deductFridge(@PathVariable("mealPlanId") Long mealPlanId) {
+        MealPlan plan = mealPlanFacade.deductFridge(currentUserProvider.getUserId(), mealPlanId);
         return ResponseEntity.ok(mealPlanMapper.toDto(plan));
     }
 

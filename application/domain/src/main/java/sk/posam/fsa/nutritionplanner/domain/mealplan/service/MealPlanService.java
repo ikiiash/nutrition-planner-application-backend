@@ -13,8 +13,11 @@ import sk.posam.fsa.nutritionplanner.domain.mealplan.PlanDay;
 import sk.posam.fsa.nutritionplanner.domain.mealplan.PlanEntry;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MealPlanService implements MealPlanFacade {
 
@@ -95,6 +98,54 @@ public class MealPlanService implements MealPlanFacade {
         MealPlan plan = readMealPlan(ownerUserId, mealPlanId);
         plan.setActive(false);
         plan.setActivatedAt(null);
+        return mealPlanRepository.save(plan);
+    }
+
+    @Override
+    public MealPlan deductFridge(String ownerUserId, Long mealPlanId) {
+        MealPlan plan = readMealPlan(ownerUserId, mealPlanId);
+        if (!plan.isActive() || plan.getActivatedAt() == null) return plan;
+
+        long daysElapsed = ChronoUnit.DAYS.between(plan.getActivatedAt(), LocalDate.now());
+        int lastDeducted = plan.getLastDeductedDayNumber();
+
+        List<PlanDay> daysToDeduct = plan.getDays().stream()
+                .filter(d -> d.getDayNumber() > lastDeducted && d.getDayNumber() <= daysElapsed)
+                .toList();
+        if (daysToDeduct.isEmpty()) return plan;
+
+        Map<Long, Double> deductions = new HashMap<>();
+        for (PlanDay day : daysToDeduct) {
+            for (PlanEntry entry : day.getEntries()) {
+                if (entry.getEntryType() == EntryType.FOOD_PRODUCT
+                        && entry.getFoodProductId() != null && entry.getGrams() != null) {
+                    deductions.merge(entry.getFoodProductId(), entry.getGrams(), Double::sum);
+                } else if (entry.getEntryType() == EntryType.MEAL && entry.getMealId() != null) {
+                    mealRepository.readById(ownerUserId, entry.getMealId()).ifPresent(meal -> {
+                        int servings = meal.getServings() != null && meal.getServings() > 0 ? meal.getServings() : 1;
+                        double portions = entry.getPortions() != null ? entry.getPortions() : 1.0;
+                        for (MealIngredient ing : meal.getIngredients()) {
+                            if (ing.getGrams() != null) {
+                                double g = (ing.getGrams() * portions) / servings;
+                                deductions.merge(ing.getFoodProductId(), g, Double::sum);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        for (Map.Entry<Long, Double> e : deductions.entrySet()) {
+            foodProductRepository.readById(ownerUserId, e.getKey()).ifPresent(product -> {
+                if (product.isInFridge() && product.getFridgeGrams() != null) {
+                    product.setFridgeGrams(Math.max(0.0, product.getFridgeGrams() - e.getValue()));
+                    foodProductRepository.save(product);
+                }
+            });
+        }
+
+        int maxDay = daysToDeduct.stream().mapToInt(PlanDay::getDayNumber).max().orElse(lastDeducted);
+        plan.setLastDeductedDayNumber(maxDay);
         return mealPlanRepository.save(plan);
     }
 
