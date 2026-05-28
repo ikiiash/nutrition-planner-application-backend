@@ -66,6 +66,14 @@ public class MealService implements MealFacade {
         mealRepository.deleteById(ownerUserId, mealId);
     }
 
+    @Override
+    public void recalculateFromFoodProduct(String ownerUserId, Long mealId) {
+        Meal meal = readMeal(ownerUserId, mealId);
+        enrichIngredients(ownerUserId, meal);
+        Meal saved = mealRepository.save(meal);
+        cascadeToPlanEntries(ownerUserId, saved);
+    }
+
     private void enrichIngredients(String ownerUserId, Meal meal) {
         if (meal.getIngredients() == null) return;
         for (MealIngredient ingredient : meal.getIngredients()) {

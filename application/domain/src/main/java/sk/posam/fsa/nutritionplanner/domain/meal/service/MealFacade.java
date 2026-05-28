@@ -15,4 +15,6 @@ public interface MealFacade {
     Meal updateMeal(String ownerUserId, Long mealId, Meal meal);
 
     void deleteMeal(String ownerUserId, Long mealId);
+
+    void recalculateFromFoodProduct(String ownerUserId, Long mealId);
 }

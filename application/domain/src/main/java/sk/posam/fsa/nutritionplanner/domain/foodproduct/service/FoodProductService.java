@@ -54,11 +54,35 @@ public class FoodProductService implements FoodProductFacade {
 
     @Override
     public FoodProduct updateFoodProduct(String ownerUserId, Long foodProductId, FoodProduct foodProduct) {
-        readFoodProduct(ownerUserId, foodProductId);
-        foodProduct.setId(foodProductId);
-        foodProduct.setOwnerUserId(ownerUserId);
-        foodProduct.validate();
-        FoodProduct saved = foodProductRepository.save(foodProduct);
+        FoodProduct existing = readFoodProduct(ownerUserId, foodProductId);
+        existing.setName(foodProduct.getName());
+        existing.setCategory(foodProduct.getCategory());
+        existing.setGrams(foodProduct.getGrams());
+        existing.setCalories(foodProduct.getCalories());
+        existing.setProtein(foodProduct.getProtein());
+        existing.setFat(foodProduct.getFat());
+        existing.setCarbohydrates(foodProduct.getCarbohydrates());
+        existing.setPrice(foodProduct.getPrice());
+        existing.setPhotoUrl(foodProduct.getPhotoUrl());
+        existing.setSodiumMg(foodProduct.getSodiumMg());
+        existing.setPotassiumMg(foodProduct.getPotassiumMg());
+        existing.setMagnesiumMg(foodProduct.getMagnesiumMg());
+        existing.setIronMg(foodProduct.getIronMg());
+        existing.setCalciumMg(foodProduct.getCalciumMg());
+        existing.setZincMg(foodProduct.getZincMg());
+        existing.setVitaminAMcg(foodProduct.getVitaminAMcg());
+        existing.setVitaminCMg(foodProduct.getVitaminCMg());
+        existing.setVitaminDMcg(foodProduct.getVitaminDMcg());
+        existing.setVitaminEMg(foodProduct.getVitaminEMg());
+        existing.setVitaminKMcg(foodProduct.getVitaminKMcg());
+        existing.setVitaminB1Mg(foodProduct.getVitaminB1Mg());
+        existing.setVitaminB2Mg(foodProduct.getVitaminB2Mg());
+        existing.setVitaminB6Mg(foodProduct.getVitaminB6Mg());
+        existing.setVitaminB9Mcg(foodProduct.getVitaminB9Mcg());
+        existing.setVitaminB12Mcg(foodProduct.getVitaminB12Mcg());
+        // inFridge and fridgeGrams are NOT touched — managed via setFridgeStatus only
+        existing.validate();
+        FoodProduct saved = foodProductRepository.save(existing);
         cascadeToMealsAndEntries(ownerUserId, saved);
         return saved;
     }
@@ -70,10 +94,10 @@ public class FoodProductService implements FoodProductFacade {
     }
 
     private void cascadeToMealsAndEntries(String ownerUserId, FoodProduct product) {
-        // Re-enrich meals that contain this ingredient (MealService.updateMeal cascades further to plan entries)
+        // Re-enrich meals that contain this ingredient and cascade to plan entries
         List<Meal> affectedMeals = mealRepository.readAllByFoodProductId(ownerUserId, product.getId());
         for (Meal meal : affectedMeals) {
-            mealFacade.updateMeal(ownerUserId, meal.getId(), meal);
+            mealFacade.recalculateFromFoodProduct(ownerUserId, meal.getId());
         }
 
         // Re-enrich FOOD_PRODUCT plan entries that directly reference this product
