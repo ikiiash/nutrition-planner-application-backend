@@ -98,6 +98,15 @@ Token endpoint:
 - RQ019 Systém umožní automaticky doplniť nutričné hodnoty potraviny na základe názvu.
 - RQ020 Systém umožní využívať rôzne úrovne predplatného (Free, Premium).
 - RQ021 Systém obmedzí prístup k vybraným funkciám podľa typu predplatného.
+- RQ022 Systém umožní evidovať zásoby potravín v domácej chladničke vrátane ich množstva.
+- RQ023 Systém automaticky odráta spotrebované potraviny z chladničky na základe aktívneho plánu stravovania a počtu uplynulých dní.
+- RQ024 Systém zohľadní zásoby v chladničke pri tvorbe nákupného zoznamu a odpočíta dostupné množstvo od požadovaného.
+- RQ025 Systém umožní aktivovať jeden plán stravovania a automaticky identifikovať aktuálny deň plánu.
+- RQ026 Systém umožní evidovať mikroživiny potravín (vitamíny A, C, D, E, K, B1, B2, B6, B9, B12 a minerály Na, K, Mg, Fe, Ca, Zn).
+- RQ027 Systém zobrazí odporúčané denné normy mikroživín prispôsobené pohlaviu používateľa.
+- RQ028 Systém umožní porovnať nutričnú hodnotu potravín a jedál voči ich cene a zoradiť ich podľa efektivity (kcal/€, bielkoviny/€, tuky/€, sacharidy/€).
+- RQ029 Systém identifikuje potravinu s najvyšším obsahom každej mikroživiny na euro (lídri mikroživín).
+- RQ030 Systém umožní viesť históriu chatových sedení s asistentom a pokračovať v predchádzajúcich konverzáciách.
 
 # Slovník pojmov
 
