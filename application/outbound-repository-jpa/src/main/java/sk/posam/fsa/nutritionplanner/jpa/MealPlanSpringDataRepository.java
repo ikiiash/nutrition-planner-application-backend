@@ -21,9 +21,9 @@ public interface MealPlanSpringDataRepository extends JpaRepository<MealPlan, Lo
     @Query("UPDATE MealPlan m SET m.active = false, m.activatedAt = null WHERE m.ownerUserId = :ownerUserId")
     void deactivateAllForUser(@Param("ownerUserId") String ownerUserId);
 
-    @Query("SELECT DISTINCT mp FROM MealPlan mp JOIN mp.days d JOIN d.entries e WHERE mp.ownerUserId = :ownerUserId AND e.entryType = sk.posam.fsa.nutritionplanner.domain.mealplan.EntryType.MEAL AND e.mealId = :mealId")
+    @Query("SELECT DISTINCT mp FROM MealPlan mp JOIN mp.days d JOIN d.entries e WHERE mp.ownerUserId = :ownerUserId AND e.mealId = :mealId")
     List<MealPlan> findAllByOwnerUserIdAndMealEntry(@Param("ownerUserId") String ownerUserId, @Param("mealId") Long mealId);
 
-    @Query("SELECT DISTINCT mp FROM MealPlan mp JOIN mp.days d JOIN d.entries e WHERE mp.ownerUserId = :ownerUserId AND e.entryType = sk.posam.fsa.nutritionplanner.domain.mealplan.EntryType.FOOD_PRODUCT AND e.foodProductId = :foodProductId")
+    @Query("SELECT DISTINCT mp FROM MealPlan mp JOIN mp.days d JOIN d.entries e WHERE mp.ownerUserId = :ownerUserId AND e.foodProductId = :foodProductId")
     List<MealPlan> findAllByOwnerUserIdAndFoodProductEntry(@Param("ownerUserId") String ownerUserId, @Param("foodProductId") Long foodProductId);
 }
