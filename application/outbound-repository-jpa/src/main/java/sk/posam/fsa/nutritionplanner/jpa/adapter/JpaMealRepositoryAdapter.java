@@ -36,4 +36,9 @@ public class JpaMealRepositoryAdapter implements MealRepository {
     public void deleteById(String ownerUserId, Long mealId) {
         readById(ownerUserId, mealId).ifPresent(mealSpringDataRepository::delete);
     }
+
+    @Override
+    public List<Meal> readAllByFoodProductId(String ownerUserId, Long foodProductId) {
+        return mealSpringDataRepository.findAllByOwnerUserIdAndIngredientFoodProductId(ownerUserId, foodProductId);
+    }
 }

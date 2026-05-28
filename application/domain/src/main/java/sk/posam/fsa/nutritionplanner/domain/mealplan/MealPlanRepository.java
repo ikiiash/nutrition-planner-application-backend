@@ -14,4 +14,8 @@ public interface MealPlanRepository {
     void deleteById(String ownerUserId, Long mealPlanId);
 
     void deactivateAll(String ownerUserId);
+
+    List<MealPlan> readAllByMealId(String ownerUserId, Long mealId);
+
+    List<MealPlan> readAllByFoodProductId(String ownerUserId, Long foodProductId);
 }

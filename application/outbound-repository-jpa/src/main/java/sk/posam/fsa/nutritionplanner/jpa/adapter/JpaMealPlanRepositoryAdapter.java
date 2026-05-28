@@ -41,4 +41,14 @@ public class JpaMealPlanRepositoryAdapter implements MealPlanRepository {
     public void deactivateAll(String ownerUserId) {
         mealPlanSpringDataRepository.deactivateAllForUser(ownerUserId);
     }
+
+    @Override
+    public List<MealPlan> readAllByMealId(String ownerUserId, Long mealId) {
+        return mealPlanSpringDataRepository.findAllByOwnerUserIdAndMealEntry(ownerUserId, mealId);
+    }
+
+    @Override
+    public List<MealPlan> readAllByFoodProductId(String ownerUserId, Long foodProductId) {
+        return mealPlanSpringDataRepository.findAllByOwnerUserIdAndFoodProductEntry(ownerUserId, foodProductId);
+    }
 }

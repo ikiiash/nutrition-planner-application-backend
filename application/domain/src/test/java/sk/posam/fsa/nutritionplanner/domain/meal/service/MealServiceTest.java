@@ -12,6 +12,7 @@ import sk.posam.fsa.nutritionplanner.domain.meal.Meal;
 import sk.posam.fsa.nutritionplanner.domain.meal.MealIngredient;
 import sk.posam.fsa.nutritionplanner.domain.meal.MealNotFoundException;
 import sk.posam.fsa.nutritionplanner.domain.meal.MealRepository;
+import sk.posam.fsa.nutritionplanner.domain.mealplan.MealPlanRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,9 @@ class MealServiceTest {
 
     @Mock
     FoodProductRepository foodProductRepository;
+
+    @Mock
+    MealPlanRepository mealPlanRepository;
 
     @InjectMocks
     MealService sut;

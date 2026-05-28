@@ -12,4 +12,6 @@ public interface MealRepository {
     Optional<Meal> readById(String ownerUserId, Long mealId);
 
     void deleteById(String ownerUserId, Long mealId);
+
+    List<Meal> readAllByFoodProductId(String ownerUserId, Long foodProductId);
 }

@@ -9,6 +9,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sk.posam.fsa.nutritionplanner.domain.foodproduct.FoodProduct;
 import sk.posam.fsa.nutritionplanner.domain.foodproduct.FoodProductNotFoundException;
 import sk.posam.fsa.nutritionplanner.domain.foodproduct.FoodProductRepository;
+import sk.posam.fsa.nutritionplanner.domain.meal.MealRepository;
+import sk.posam.fsa.nutritionplanner.domain.meal.service.MealFacade;
+import sk.posam.fsa.nutritionplanner.domain.mealplan.MealPlanRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,15 @@ class FoodProductServiceTest {
 
     @Mock
     FoodProductRepository foodProductRepository;
+
+    @Mock
+    MealRepository mealRepository;
+
+    @Mock
+    MealPlanRepository mealPlanRepository;
+
+    @Mock
+    MealFacade mealFacade;
 
     @InjectMocks
     FoodProductService sut;
