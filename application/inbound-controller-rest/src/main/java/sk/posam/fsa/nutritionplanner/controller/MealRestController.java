@@ -2,6 +2,7 @@ package sk.posam.fsa.nutritionplanner.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import sk.posam.fsa.nutritionplanner.domain.meal.Meal;
 import sk.posam.fsa.nutritionplanner.domain.meal.service.MealFacade;
@@ -57,6 +58,7 @@ public class MealRestController implements MealApi {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<MealDto> updateMeal(Long mealId, UpdateMealRequestDto updateMealRequestDto) {
         Meal meal = mealMapper.toDomain(updateMealRequestDto);
         Meal updated = mealFacade.updateMeal(currentUserProvider.getUserId(), mealId, meal);

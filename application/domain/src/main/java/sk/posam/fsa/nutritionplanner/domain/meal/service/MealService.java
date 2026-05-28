@@ -49,12 +49,13 @@ public class MealService implements MealFacade {
 
     @Override
     public Meal updateMeal(String ownerUserId, Long mealId, Meal meal) {
-        readMeal(ownerUserId, mealId);
-        meal.setId(mealId);
-        meal.setOwnerUserId(ownerUserId);
-        enrichIngredients(ownerUserId, meal);
-        meal.validate();
-        Meal saved = mealRepository.save(meal);
+        Meal existing = readMeal(ownerUserId, mealId);
+        existing.setName(meal.getName());
+        existing.setServings(meal.getServings());
+        existing.setIngredients(meal.getIngredients());
+        enrichIngredients(ownerUserId, existing);
+        existing.validate();
+        Meal saved = mealRepository.save(existing);
         cascadeToPlanEntries(ownerUserId, saved);
         return saved;
     }
