@@ -134,7 +134,7 @@ function Ensure-Client {
         clientId = $ClientId; name = $ClientId; enabled = $true; protocol = 'openid-connect'
         publicClient = $true
         standardFlowEnabled = $true; directAccessGrantsEnabled = $true; serviceAccountsEnabled = $false
-        implicitFlowEnabled = $false; redirectUris = @('http://localhost:4200/*'); webOrigins = @('http://localhost:4200')
+        implicitFlowEnabled = $false; redirectUris = @('http://localhost:4200/*', 'https://nutrition-planner.net/*'); webOrigins = @('http://localhost:4200', 'https://nutrition-planner.net')
         attributes = @{ 'post.logout.redirect.uris' = '*' }
     }
     if ([string]::IsNullOrWhiteSpace($clientUuid)) {
