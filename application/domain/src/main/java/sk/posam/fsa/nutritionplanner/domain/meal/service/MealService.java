@@ -52,9 +52,9 @@ public class MealService implements MealFacade {
         Meal existing = readMeal(ownerUserId, mealId);
         existing.setName(meal.getName());
         existing.setServings(meal.getServings());
+        enrichIngredients(ownerUserId, meal);
         existing.getIngredients().clear();
         existing.getIngredients().addAll(meal.getIngredients());
-        enrichIngredients(ownerUserId, existing);
         existing.validate();
         Meal saved = mealRepository.save(existing);
         cascadeToPlanEntries(ownerUserId, saved);
