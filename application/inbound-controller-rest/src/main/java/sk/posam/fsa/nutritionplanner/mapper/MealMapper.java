@@ -15,26 +15,21 @@ import java.util.List;
 public class MealMapper {
 
     public Meal toDomain(CreateMealRequestDto dto) {
-        Meal meal = new Meal();
-        meal.setName(dto.getName());
-        meal.setServings(dto.getServings());
-        meal.setIngredients(dto.getIngredients().stream().map(this::toDomain).toList());
-        return meal;
+        return Meal.of(
+                dto.getName(),
+                dto.getServings(),
+                dto.getIngredients().stream().map(this::toDomain).toList());
     }
 
     public Meal toDomain(UpdateMealRequestDto dto) {
-        Meal meal = new Meal();
-        meal.setName(dto.getName());
-        meal.setServings(dto.getServings());
-        meal.setIngredients(dto.getIngredients().stream().map(this::toDomain).toList());
-        return meal;
+        return Meal.of(
+                dto.getName(),
+                dto.getServings(),
+                dto.getIngredients().stream().map(this::toDomain).toList());
     }
 
     private MealIngredient toDomain(MealIngredientRequestDto dto) {
-        MealIngredient ingredient = new MealIngredient();
-        ingredient.setFoodProductId(dto.getFoodProductId());
-        ingredient.setGrams(dto.getGrams());
-        return ingredient;
+        return MealIngredient.of(dto.getFoodProductId(), dto.getGrams());
     }
 
     public MealDto toDto(Meal meal) {

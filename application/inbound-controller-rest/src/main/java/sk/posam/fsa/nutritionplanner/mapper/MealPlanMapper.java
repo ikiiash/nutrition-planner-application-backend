@@ -21,30 +21,21 @@ import java.util.List;
 public class MealPlanMapper {
 
     public MealPlan toDomain(CreateMealPlanRequestDto dto) {
-        MealPlan plan = new MealPlan();
-        plan.setName(dto.getName());
-        plan.setStartDate(dto.getStartDate());
-        plan.setNumberOfDays(dto.getNumberOfDays());
-        return plan;
+        return MealPlan.of(dto.getName(), dto.getStartDate(), dto.getNumberOfDays());
     }
 
     public MealPlan toDomain(UpdateMealPlanRequestDto dto) {
-        MealPlan plan = new MealPlan();
-        plan.setName(dto.getName());
-        plan.setStartDate(dto.getStartDate());
-        plan.setNumberOfDays(dto.getNumberOfDays());
-        return plan;
+        return MealPlan.of(dto.getName(), dto.getStartDate(), dto.getNumberOfDays());
     }
 
     public PlanEntry toDomain(AddPlanEntryRequestDto dto) {
-        PlanEntry entry = new PlanEntry();
-        entry.setMealType(toMealType(dto.getMealType()));
-        entry.setEntryType(toEntryType(dto.getEntryType()));
-        entry.setMealId(dto.getMealId());
-        entry.setPortions(dto.getPortions());
-        entry.setFoodProductId(dto.getFoodProductId());
-        entry.setGrams(dto.getGrams());
-        return entry;
+        return PlanEntry.of(
+                toMealType(dto.getMealType()),
+                toEntryType(dto.getEntryType()),
+                dto.getMealId(),
+                dto.getPortions(),
+                dto.getFoodProductId(),
+                dto.getGrams());
     }
 
     public MealPlanDto toDto(MealPlan plan) {

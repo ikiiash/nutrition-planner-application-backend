@@ -20,6 +20,14 @@ public class MealPlan {
     public MealPlan() {
     }
 
+    public static MealPlan of(String name, java.time.LocalDate startDate, Integer numberOfDays) {
+        MealPlan p = new MealPlan();
+        p.name = name;
+        p.startDate = startDate;
+        p.numberOfDays = numberOfDays;
+        return p;
+    }
+
     public void validate() {
         if (ownerUserId == null || ownerUserId.isBlank()) {
             throw new IllegalArgumentException("Meal plan owner must not be blank.");

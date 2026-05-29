@@ -10,8 +10,7 @@ import sk.posam.fsa.nutritionplanner.rest.dto.UpdateFoodProductRequestDto;
 public class FoodProductMapper {
 
     public FoodProduct toDomain(CreateFoodProductRequestDto requestDto) {
-        FoodProduct p = new FoodProduct(
-                null, null,
+        FoodProduct p = FoodProduct.of(
                 requestDto.getName(), requestDto.getCategory(), requestDto.getGrams(),
                 requestDto.getCalories(), requestDto.getProtein(), requestDto.getFat(),
                 requestDto.getCarbohydrates(), requestDto.getPrice(), requestDto.getPhotoUrl());
@@ -53,8 +52,7 @@ public class FoodProductMapper {
     }
 
     public FoodProduct toDomain(UpdateFoodProductRequestDto requestDto) {
-        FoodProduct p = new FoodProduct(
-                null, null,
+        FoodProduct p = FoodProduct.of(
                 requestDto.getName(), requestDto.getCategory(), requestDto.getGrams(),
                 requestDto.getCalories(), requestDto.getProtein(), requestDto.getFat(),
                 requestDto.getCarbohydrates(), requestDto.getPrice(), requestDto.getPhotoUrl());

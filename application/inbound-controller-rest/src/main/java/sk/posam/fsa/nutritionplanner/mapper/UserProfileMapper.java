@@ -15,22 +15,15 @@ import sk.posam.fsa.nutritionplanner.rest.dto.UserProfileDto;
 public class UserProfileMapper {
 
     public UserProfile toDomain(UpdateUserProfileRequestDto dto) {
-        UserProfile p = new UserProfile();
-        p.setNickname(dto.getNickname());
-        p.setFirstName(dto.getFirstName());
-        p.setAge(dto.getAge());
-        p.setHeightCm(dto.getHeightCm());
-        p.setWeightKg(dto.getWeightKg());
-        if (dto.getGender() != null) {
-            p.setGender(Gender.valueOf(dto.getGender().getValue()));
-        }
-        if (dto.getActivityLevel() != null) {
-            p.setActivityLevel(ActivityLevel.valueOf(dto.getActivityLevel().getValue()));
-        }
-        if (dto.getGoal() != null) {
-            p.setGoal(UserGoal.valueOf(dto.getGoal().getValue()));
-        }
-        return p;
+        return UserProfile.of(
+                dto.getNickname(),
+                dto.getFirstName(),
+                dto.getAge(),
+                dto.getHeightCm(),
+                dto.getWeightKg(),
+                dto.getGender() != null ? Gender.valueOf(dto.getGender().getValue()) : null,
+                dto.getActivityLevel() != null ? ActivityLevel.valueOf(dto.getActivityLevel().getValue()) : null,
+                dto.getGoal() != null ? UserGoal.valueOf(dto.getGoal().getValue()) : null);
     }
 
     public UserProfileDto toDto(UserProfile p) {

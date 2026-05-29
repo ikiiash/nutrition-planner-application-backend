@@ -25,6 +25,21 @@ public class UserProfile {
     public UserProfile() {
     }
 
+    public static UserProfile of(String nickname, String firstName, Integer age,
+                                   Double heightCm, Double weightKg,
+                                   Gender gender, ActivityLevel activityLevel, UserGoal goal) {
+        UserProfile p = new UserProfile();
+        p.nickname = nickname;
+        p.firstName = firstName;
+        p.age = age;
+        p.heightCm = heightCm;
+        p.weightKg = weightKg;
+        p.gender = gender;
+        p.activityLevel = activityLevel;
+        p.goal = goal;
+        return p;
+    }
+
     public void validateForUpdate() {
         if (keycloakUserId == null || keycloakUserId.isBlank()) {
             throw new IllegalArgumentException("User profile owner must not be blank.");

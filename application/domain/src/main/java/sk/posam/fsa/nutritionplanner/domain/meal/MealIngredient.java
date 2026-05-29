@@ -34,6 +34,13 @@ public class MealIngredient {
     public MealIngredient() {
     }
 
+    public static MealIngredient of(Long foodProductId, Double grams) {
+        MealIngredient i = new MealIngredient();
+        i.foodProductId = foodProductId;
+        i.grams = grams;
+        return i;
+    }
+
     public void validate() {
         if (foodProductId == null) {
             throw new IllegalArgumentException("Ingredient food product ID must not be null.");

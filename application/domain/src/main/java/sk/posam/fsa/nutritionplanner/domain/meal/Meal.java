@@ -15,6 +15,16 @@ public class Meal {
         this.ingredients = new java.util.ArrayList<>();
     }
 
+    public static Meal of(String name, Integer servings, List<MealIngredient> ingredients) {
+        Meal m = new Meal();
+        m.name = name;
+        m.servings = servings;
+        if (ingredients != null) {
+            m.ingredients.addAll(ingredients);
+        }
+        return m;
+    }
+
     public void validate() {
         if (ownerUserId == null || ownerUserId.isBlank()) {
             throw new IllegalArgumentException("Meal owner must not be blank.");

@@ -42,6 +42,19 @@ public class PlanEntry {
     public PlanEntry() {
     }
 
+    public static PlanEntry of(MealType mealType, EntryType entryType,
+                                Long mealId, Double portions,
+                                Long foodProductId, Double grams) {
+        PlanEntry e = new PlanEntry();
+        e.mealType = mealType;
+        e.entryType = entryType;
+        e.mealId = mealId;
+        e.portions = portions;
+        e.foodProductId = foodProductId;
+        e.grams = grams;
+        return e;
+    }
+
     public void validate() {
         if (mealType == null) {
             throw new IllegalArgumentException("Meal type must not be null.");

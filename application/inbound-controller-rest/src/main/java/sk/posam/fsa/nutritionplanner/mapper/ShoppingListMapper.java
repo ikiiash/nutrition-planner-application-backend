@@ -23,15 +23,14 @@ public class ShoppingListMapper {
     }
 
     public ShoppingListItem toDomain(SaveShoppingListItemRequestDto dto) {
-        ShoppingListItem item = new ShoppingListItem();
-        item.setFoodProductId(dto.getFoodProductId());
-        item.setFoodProductName(dto.getFoodProductName());
-        item.setGrams(dto.getGrams());
-        item.setCaloriesPer100g(dto.getCaloriesPer100g() != null ? dto.getCaloriesPer100g() : 0);
-        item.setProteinPer100g(dto.getProteinPer100g() != null ? dto.getProteinPer100g() : 0);
-        item.setFatPer100g(dto.getFatPer100g() != null ? dto.getFatPer100g() : 0);
-        item.setCarbsPer100g(dto.getCarbsPer100g() != null ? dto.getCarbsPer100g() : 0);
-        item.setPricePer100g(dto.getPricePer100g() != null ? dto.getPricePer100g() : 0);
-        return item;
+        return ShoppingListItem.of(
+                dto.getFoodProductId(),
+                dto.getFoodProductName(),
+                dto.getGrams(),
+                dto.getCaloriesPer100g() != null ? dto.getCaloriesPer100g() : 0,
+                dto.getProteinPer100g() != null ? dto.getProteinPer100g() : 0,
+                dto.getFatPer100g() != null ? dto.getFatPer100g() : 0,
+                dto.getCarbsPer100g() != null ? dto.getCarbsPer100g() : 0,
+                dto.getPricePer100g() != null ? dto.getPricePer100g() : 0);
     }
 }

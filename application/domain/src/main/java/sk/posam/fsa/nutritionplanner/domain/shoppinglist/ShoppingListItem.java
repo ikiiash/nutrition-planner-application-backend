@@ -2,6 +2,22 @@ package sk.posam.fsa.nutritionplanner.domain.shoppinglist;
 
 public class ShoppingListItem {
     private Long id;
+
+    public static ShoppingListItem of(Long foodProductId, String foodProductName, double grams,
+                                       double caloriesPer100g, double proteinPer100g, double fatPer100g,
+                                       double carbsPer100g, double pricePer100g) {
+        ShoppingListItem item = new ShoppingListItem();
+        item.foodProductId = foodProductId;
+        item.foodProductName = foodProductName;
+        item.grams = grams;
+        item.caloriesPer100g = caloriesPer100g;
+        item.proteinPer100g = proteinPer100g;
+        item.fatPer100g = fatPer100g;
+        item.carbsPer100g = carbsPer100g;
+        item.pricePer100g = pricePer100g;
+        return item;
+    }
+
     private String ownerUserId;
     private Long foodProductId;
     private String foodProductName;

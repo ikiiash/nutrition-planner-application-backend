@@ -39,6 +39,22 @@ public class FoodProduct {
     public FoodProduct() {
     }
 
+    public static FoodProduct of(String name, String category, Double grams,
+                                  Double calories, Double protein, Double fat,
+                                  Double carbohydrates, Double price, String photoUrl) {
+        FoodProduct p = new FoodProduct();
+        p.name = name;
+        p.category = category;
+        p.grams = grams;
+        p.calories = calories;
+        p.protein = protein;
+        p.fat = fat;
+        p.carbohydrates = carbohydrates;
+        p.price = price;
+        p.photoUrl = photoUrl;
+        return p;
+    }
+
     public FoodProduct(Long id,
                        String ownerUserId,
                        String name,
