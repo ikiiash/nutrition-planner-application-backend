@@ -60,7 +60,12 @@ function Invoke-CurlJsonRequest {
     return $response
 }
 
-function Invoke-ApiGet { param([string]$Path) Invoke-RestMethod -Method Get -Uri "$KeycloakUrl$Path" -Headers (Get-AuthHeaders) }
+function Invoke-ApiGet {
+    param([string]$Path)
+    $response = & curl.exe -s -H "Authorization: Bearer $($script:AccessToken)" "$KeycloakUrl$Path"
+    if ([string]::IsNullOrWhiteSpace($response)) { return $null }
+    return $response | ConvertFrom-Json
+}
 function Invoke-ApiPost { param([string]$Path, $Payload) Invoke-CurlJsonRequest -Method 'POST' -Path $Path -Payload $Payload | Out-Null }
 function Invoke-ApiPut { param([string]$Path, $Payload) Invoke-CurlJsonRequest -Method 'PUT' -Path $Path -Payload $Payload | Out-Null }
 function Invoke-ApiDelete {

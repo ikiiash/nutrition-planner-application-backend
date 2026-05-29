@@ -53,7 +53,7 @@ for role in ADMIN USER PREMIUM_USER; do
 done
 
 client_uuid="$(api_get "/admin/realms/${REALM_NAME}/clients?clientId=${CLIENT_ID}" | jq -r '.[0].id // empty')"
-client_payload="$(jq -n --arg clientId "$CLIENT_ID" '{clientId:$clientId,name:$clientId,enabled:true,protocol:"openid-connect",publicClient:true,standardFlowEnabled:true,directAccessGrantsEnabled:true,serviceAccountsEnabled:false,implicitFlowEnabled:false,redirectUris:["http://localhost:4200/*"],webOrigins:["http://localhost:4200"],attributes:{"post.logout.redirect.uris":"*"}}')"
+client_payload="$(jq -n --arg clientId "$CLIENT_ID" '{clientId:$clientId,name:$clientId,enabled:true,protocol:"openid-connect",publicClient:true,standardFlowEnabled:true,directAccessGrantsEnabled:true,serviceAccountsEnabled:false,implicitFlowEnabled:false,redirectUris:["http://localhost:4200/*","https://nutrition-planner.net/*"],webOrigins:["http://localhost:4200","https://nutrition-planner.net"],attributes:{"post.logout.redirect.uris":"*"}}')"
 if [[ -z "$client_uuid" ]]; then
   api_post "/admin/realms/${REALM_NAME}/clients" "$client_payload"
   client_uuid="$(api_get "/admin/realms/${REALM_NAME}/clients?clientId=${CLIENT_ID}" | jq -r '.[0].id // empty')"
