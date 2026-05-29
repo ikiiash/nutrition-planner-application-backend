@@ -12,6 +12,7 @@ public class Meal {
     private List<MealIngredient> ingredients;
 
     public Meal() {
+        this.ingredients = new java.util.ArrayList<>();
     }
 
     public void validate() {
