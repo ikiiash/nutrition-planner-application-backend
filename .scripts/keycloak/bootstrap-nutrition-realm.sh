@@ -42,6 +42,9 @@ if [[ "$status" == "404" ]]; then
   api_post "/admin/realms" "$(jq -n --arg realm "$REALM_NAME" '{realm:$realm, enabled:true}')"
 fi
 
+# Enable self-registration
+api_put "/admin/realms/${REALM_NAME}" "$(jq -n '{registrationAllowed:true,registrationEmailAsUsername:false,verifyEmail:false}')"
+
 for role in ADMIN USER PREMIUM_USER; do
   role_status="$(curl -sS -o /dev/null -w '%{http_code}' -H "Authorization: Bearer ${ACCESS_TOKEN}" "${KEYCLOAK_URL}/admin/realms/${REALM_NAME}/roles/${role}")"
   if [[ "$role_status" == "404" ]]; then
@@ -76,6 +79,15 @@ ensure_user() {
   role_repr="$(api_get "/admin/realms/${REALM_NAME}/roles/${role}")"
   api_post "/admin/realms/${REALM_NAME}/users/${user_id}/role-mappings/realm" "[$role_repr]"
 }
+
+# Add USER role to default-roles-{realm} so new registrations get USER role automatically
+default_role_name="default-roles-$(echo "${REALM_NAME}" | tr '[:upper:]' '[:lower:]')"
+user_role_repr="$(api_get "/admin/realms/${REALM_NAME}/roles/USER")"
+existing_composites="$(api_get "/admin/realms/${REALM_NAME}/roles/${default_role_name}/composites")"
+already_added="$(echo "$existing_composites" | jq '[.[] | select(.name=="USER")] | length')"
+if [[ "$already_added" == "0" ]]; then
+  api_post "/admin/realms/${REALM_NAME}/roles/${default_role_name}/composites" "[$user_role_repr]"
+fi
 
 ensure_user admin@nutrition.local admin123 ADMIN System Admin
 ensure_user user@nutrition.local user123 USER Basic User

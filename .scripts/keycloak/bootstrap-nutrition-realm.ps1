@@ -112,6 +112,23 @@ function Ensure-Realm {
             }
         }
     }
+    # Enable self-registration
+    Invoke-ApiPut -Path "/admin/realms/$RealmName" -Payload @{
+        registrationAllowed          = $true
+        registrationEmailAsUsername  = $false
+        verifyEmail                  = $false
+    }
+}
+
+function Set-DefaultRole {
+    param([string]$RoleName)
+    $defaultRoleName = "default-roles-$($RealmName.ToLower())"
+    $roleRepr = Invoke-ApiGet -Path "/admin/realms/$RealmName/roles/$([uri]::EscapeDataString($RoleName))"
+    $existing = ConvertTo-Array (Invoke-ApiGet -Path "/admin/realms/$RealmName/roles/$([uri]::EscapeDataString($defaultRoleName))/composites")
+    $alreadyAdded = $existing | Where-Object { $_.name -eq $RoleName }
+    if (-not $alreadyAdded) {
+        Invoke-ApiPost -Path "/admin/realms/$RealmName/roles/$([uri]::EscapeDataString($defaultRoleName))/composites" -Payload @($roleRepr)
+    }
 }
 
 function Ensure-RealmRole {
@@ -178,6 +195,7 @@ function Ensure-User {
 Get-AdminToken
 Ensure-Realm
 foreach ($role in $Roles) { Ensure-RealmRole -RoleName $role }
+Set-DefaultRole -RoleName 'USER'
 Ensure-Client
 foreach ($user in $Users) { Ensure-User -User $user }
 
