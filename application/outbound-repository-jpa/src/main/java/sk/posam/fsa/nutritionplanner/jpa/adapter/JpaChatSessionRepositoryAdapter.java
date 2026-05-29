@@ -1,6 +1,7 @@
 package sk.posam.fsa.nutritionplanner.jpa.adapter;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import sk.posam.fsa.nutritionplanner.domain.ai.ChatSession;
 import sk.posam.fsa.nutritionplanner.domain.ai.ChatSessionRepository;
 import sk.posam.fsa.nutritionplanner.jpa.ChatSessionSpringDataRepository;
@@ -18,6 +19,7 @@ public class JpaChatSessionRepositoryAdapter implements ChatSessionRepository {
     }
 
     @Override
+    @Transactional
     public ChatSession save(ChatSession session) {
         return repo.save(session);
     }
@@ -33,6 +35,7 @@ public class JpaChatSessionRepositoryAdapter implements ChatSessionRepository {
     }
 
     @Override
+    @Transactional
     public void deleteById(String ownerUserId, Long sessionId) {
         readById(ownerUserId, sessionId).ifPresent(repo::delete);
     }

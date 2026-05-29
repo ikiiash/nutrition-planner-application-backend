@@ -1,6 +1,7 @@
 package sk.posam.fsa.nutritionplanner.jpa.adapter;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import sk.posam.fsa.nutritionplanner.domain.foodproduct.FoodProduct;
 import sk.posam.fsa.nutritionplanner.domain.foodproduct.FoodProductRepository;
 import sk.posam.fsa.nutritionplanner.jpa.FoodProductSpringDataRepository;
@@ -18,6 +19,7 @@ public class JpaFoodProductRepositoryAdapter implements FoodProductRepository {
     }
 
     @Override
+    @Transactional
     public FoodProduct save(FoodProduct foodProduct) {
         return foodProductSpringDataRepository.save(foodProduct);
     }
@@ -38,6 +40,7 @@ public class JpaFoodProductRepositoryAdapter implements FoodProductRepository {
     }
 
     @Override
+    @Transactional
     public void deleteById(String ownerUserId, Long foodProductId) {
         readById(ownerUserId, foodProductId).ifPresent(foodProductSpringDataRepository::delete);
     }
